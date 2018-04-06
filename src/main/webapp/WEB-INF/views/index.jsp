@@ -17,7 +17,7 @@
 <div><form:button value="submit">Login</form:button></div>
 </form:form>
 
-<a href="${pageContext.request.contextPath}/user/validateUser/newUserRegistration">Register new user.!</a>
+<a href="${pageContext.request.contextPath}/user/newUserRegistration">Register new user.!</a>
 </body>
 
 </html>
