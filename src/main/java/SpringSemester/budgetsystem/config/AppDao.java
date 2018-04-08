@@ -18,7 +18,6 @@ import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureExcepti
 @ComponentScan(basePackages="SpringSemester.budgetsystem")
 @PropertySource(value= {"classpath:appDAO.properties"}) 
 public class AppDao {
-	
 	@Autowired
 	private Environment environment;
 	

@@ -4,7 +4,15 @@ package SpringSemester.budgetsystem.beans;
 public class UserInfo {
 private String user_id,user_fname,user_lname,user_type,email_id,mobile_contact,password,address,profile_creation_date;
 private String rec1_ques,rec1_ans,rec2_ques,rec2_ans;
-private String last_log_time;
+private String last_log_time,status;
+
+public String getStatus() {
+	return status;
+}
+
+public void setStatus(String status) {
+	this.status = status;
+}
 
 public UserInfo() {
 

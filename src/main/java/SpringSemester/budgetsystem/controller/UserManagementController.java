@@ -40,4 +40,10 @@ public class UserManagementController {
 		model.addAttribute("UserInfo",new UserInfo());
 		return "userregistration";
 	}
+	
+	@RequestMapping(value="/processRegistration")
+	public String processRegistration(@ModelAttribute UserInfo userinfo, Model  model) {
+		boolean status = userManagementServices.addNewUser(userinfo);
+		return null;
+	}
 }

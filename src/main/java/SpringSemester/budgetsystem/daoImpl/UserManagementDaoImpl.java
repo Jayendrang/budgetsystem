@@ -15,6 +15,7 @@ import SpringSemester.budgetsystem.beans.SessionInfo;
 import SpringSemester.budgetsystem.beans.UserInfo;
 import SpringSemester.budgetsystem.beans.UserLogin;
 import SpringSemester.budgetsystem.dao.UserManagementDao;
+import SpringSemester.budgetsystem.utilities.ApplicationUtilities;
 
 @Repository
 @Qualifier("usermanagementdao")
@@ -43,7 +44,22 @@ public class UserManagementDaoImpl implements UserManagementDao {
 
 	@Override
 	public boolean addNewUser(UserInfo userdata) {
-		// TODO Auto-generated method stub
+	
+		try {
+			String newUserInsertQuery="insert into user_information(user_id,user_first_name,user_lastname,user_type,email_id,mobile_contact,password,address,profile_creation_date,reset_temp_password,recovery_question_1,recovery_answer_1,recovery_question_2,recovery_answer_2,last_login_date,status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+			String userID =ApplicationUtilities.getRandomUserID(userdata.getUser_fname(),userdata.getUser_lname());
+			userdata.setUser_id(userID);
+			String creationDate = ApplicationUtilities.getCurrentDate();
+			userdata.setProfile_creation_date(creationDate);
+			userdata.setStatus(ApplicationUtilities.ACTIVE_STATUS);
+			int count = template.update(newUserInsertQuery,userdata.getUser_id(),userdata.getUser_fname(),userdata.getUser_lname(),userdata.getUser_type(),userdata.getUser_type(),userdata.getEmail_id(),userdata.getMobile_contact(),userdata.getPassword(),userdata.getAddress(),userdata.getProfile_creation_date(),userdata.getRec1_ques(),userdata.getRec1_ans(),userdata.getRec2_ques(),userdata.getRec1_ans(),userdata.getLast_log_time(),userdata.getStatus());
+			if(count>0) {
+				return true;
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
 		return false;
 	}
 

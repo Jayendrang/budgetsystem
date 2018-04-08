@@ -32,4 +32,28 @@ public class UserManagementServicesImpl implements UserManagementServices {
 		return null;
 	}
 
+	@Override
+	public boolean addNewUser(UserInfo info) {
+		boolean status = usermanagementdao.addNewUser(info);
+		return false;
+	}
+
+	@Override
+	public UserInfo updateProfile(UserInfo userInfo, SessionInfo session) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean closeProfile(SessionInfo session) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean resetPassword(SessionInfo session) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
