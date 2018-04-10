@@ -8,6 +8,7 @@ import SpringSemester.budgetsystem.beans.UserInfo;
 import SpringSemester.budgetsystem.beans.UserLogin;
 import SpringSemester.budgetsystem.dao.UserManagementDao;
 import SpringSemester.budgetsystem.services.UserManagementServices;
+import SpringSemester.budgetsystem.utilities.ApplicationUtilities;
 
 @Service("usermanagementservice")
 public class UserManagementServicesImpl implements UserManagementServices {
@@ -34,8 +35,14 @@ public class UserManagementServicesImpl implements UserManagementServices {
 
 	@Override
 	public boolean addNewUser(UserInfo info) {
-		boolean status = usermanagementdao.addNewUser(info);
-		return false;
+		
+		info.setUser_id(ApplicationUtilities.getRandomUserID(info.getUser_fname(),info.getUser_lname()));
+		info.setProfile_creation_date( ApplicationUtilities.getCurrentDate());
+		info.setStatus(ApplicationUtilities.ACTIVE_STATUS);
+		info.setLast_log_time(ApplicationUtilities.getCurrentDateAndTime());
+		info.setUser_type("GNUSR");
+		
+		return usermanagementdao.addNewUser(info);
 	}
 
 	@Override

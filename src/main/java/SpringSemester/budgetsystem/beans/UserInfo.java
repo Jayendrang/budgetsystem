@@ -3,7 +3,14 @@ package SpringSemester.budgetsystem.beans;
 
 public class UserInfo {
 private String user_id,user_fname,user_lname,user_type,email_id,mobile_contact,password,address,profile_creation_date;
-private String rec1_ques,rec1_ans,rec2_ques,rec2_ans;
+private String user_temp_password,rec1_ques,rec1_ans,rec2_ques,rec2_ans;
+public String getUser_temp_password() {
+	return user_temp_password;
+}
+
+public void setUser_temp_password(String user_temp_password) {
+	this.user_temp_password = user_temp_password;
+}
 private String last_log_time,status;
 
 public String getStatus() {

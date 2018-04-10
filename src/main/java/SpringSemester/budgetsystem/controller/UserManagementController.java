@@ -25,7 +25,7 @@ public class UserManagementController {
 		System.out.println("User management controller -- initiated()");
 		
 	}
-	@RequestMapping(value="/validateUser")
+	@RequestMapping(value="/validateUser" )
 	public String validateUser(@ModelAttribute UserLogin login, Model model) {
 		System.out.println("Validate user servlet");
 		if(login!=null) {
@@ -44,6 +44,7 @@ public class UserManagementController {
 	@RequestMapping(value="/processRegistration")
 	public String processRegistration(@ModelAttribute UserInfo userinfo, Model  model) {
 		boolean status = userManagementServices.addNewUser(userinfo);
+		System.out.println("User Add status::"+status);
 		return null;
 	}
 }

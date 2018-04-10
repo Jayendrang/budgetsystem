@@ -10,6 +10,8 @@ public class ApplicationUtilities {
 	//General User status
 	public static String ACTIVE_STATUS="ACTIVE";
 	public static String INACTIVE_STATUS="INACTIVE";
+	public static String USER_TYPE_GENERAL="GNUSR";
+	public static String USER_TYPE_ADMIN="ADMIN";
 	// Current Date
 	public static String getCurrentDate() {
 
