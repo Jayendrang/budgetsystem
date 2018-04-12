@@ -1,5 +1,6 @@
 package SpringSemester.budgetsystem.servicesimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,37 +15,72 @@ import SpringSemester.budgetsystem.services.ExpensesServices;
 public class ExpensesServiceImpl implements ExpensesServices {
 
 	@Autowired
-	ExpenesesDao expenses;
+	ExpenesesDao expensesdao;
 	
+	public ExpensesServiceImpl() {
+	
+	 System.out.println("Expenses service -- created()");
+	}
 	
 	@Override
 	public boolean addExpenses(List<Expenses> expenses,SessionInfo session) {
-		
-		return false;
+		boolean daoproceedflag=false;
+		boolean servletflag =false;
+		if((session!=null) && (!expenses.isEmpty())) {
+		for(Expenses expense1 : expenses) {
+			if(expense1.getUser_id().trim().equals(session.getUserName().trim())){
+				daoproceedflag=true;
+				break;
+			}
+		}
+		if(daoproceedflag)
+		{
+			servletflag=expensesdao.addExpenses(expenses,session);
+		}
+		}
+		return servletflag;
 	}
 
 	@Override
 	public boolean modifyExpenses(Expenses expenses,SessionInfo session) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean servletflag=false;
+		if((!expenses.equals(null)) && (!session.equals(null))) {
+			if(session.getUserName().trim().equals(expenses.getUser_id().trim())){
+				servletflag=expensesdao.updateExpenses(expenses,session);
+			}
+		}
+		
+		return servletflag;
 	}
 
 	@Override
 	public boolean removeListOfExpenses(List<Expenses> expensesList,SessionInfo session) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean servletflag=false;
+		if((!expensesList.isEmpty())&& (!session.equals(null))) {
+			servletflag=expensesdao.deleteExpenses(expensesList,session);
+		}
+		
+		return servletflag;
 	}
 
 	@Override
 	public List<Expenses> getAllExpenses(SessionInfo session) {
-		// TODO Auto-generated method stub
+		List<Expenses> returnList = new ArrayList<Expenses>();
+		if(!session.equals(null)) {
+			return returnList=expensesdao.retrieveAllExpenses(session);
+		}
 		return null;
 	}
 
 	@Override
 	public List<Expenses> getExpensesByDate(String fromDate, String toDate, SessionInfo session) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Expenses> returnList = new ArrayList<Expenses>();
+		if(!session.equals(null)) {
+			if((!fromDate.isEmpty())&&(!toDate.isEmpty())){
+				returnList = expensesdao.retrieveExpensesByDate(fromDate, toDate, session);
+			}
+		}
+		return returnList;
 	}
 
 }

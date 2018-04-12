@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Expenses {
 	
-private String expenses_id,user_id,expenses_date,expneses_type,expenses_category,expenses_desc,amount,remark;
+private String expenses_id,user_id,expenses_date,expneses_type,expenses_name,expenses_desc,amount,remark;
 private List<Expenses> lisofExpenses = new ArrayList<Expenses>();
 
 public Expenses() {
@@ -53,12 +53,12 @@ public void setExpneses_type(String expneses_type) {
 	this.expneses_type = expneses_type;
 }
 
-public String getExpenses_category() {
-	return expenses_category;
+public String getExpenses_name() {
+	return expenses_name;
 }
 
-public void setExpenses_category(String expenses_category) {
-	this.expenses_category = expenses_category;
+public void setExpenses_name(String expenses_category) {
+	this.expenses_name = expenses_category;
 }
 
 public String getExpenses_desc() {

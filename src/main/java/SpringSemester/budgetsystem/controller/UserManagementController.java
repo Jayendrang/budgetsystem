@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import SpringSemester.budgetsystem.beans.SessionInfo;
 import SpringSemester.budgetsystem.beans.UserInfo;
@@ -25,7 +26,7 @@ public class UserManagementController {
 		System.out.println("User management controller -- initiated()");
 		
 	}
-	@RequestMapping(value="/validateUser" )
+	@RequestMapping(value="/validateUser", method=RequestMethod.GET )
 	public String validateUser(@ModelAttribute UserLogin login, Model model) {
 		System.out.println("Validate user servlet");
 		if(login!=null) {
@@ -35,13 +36,13 @@ public class UserManagementController {
 		return "welcome";
 	}
 	
-	@RequestMapping(value="/newUserRegistration")
+	@RequestMapping(value="/newUserRegistration", method=RequestMethod.GET)
 	public String userRegistration(Model model) {
 		model.addAttribute("UserInfo",new UserInfo());
 		return "userregistration";
 	}
 	
-	@RequestMapping(value="/processRegistration")
+	@RequestMapping(value="/processRegistration", method=RequestMethod.POST)
 	public String processRegistration(@ModelAttribute UserInfo userinfo, Model  model) {
 		boolean status = userManagementServices.addNewUser(userinfo);
 		System.out.println("User Add status::"+status);
