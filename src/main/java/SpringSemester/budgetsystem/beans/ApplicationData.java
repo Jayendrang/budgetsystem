@@ -5,7 +5,7 @@ package SpringSemester.budgetsystem.beans;
 public class ApplicationData {
 
 	public ApplicationData() {
-		System.out.println("Application support bean");
+	
 	}
 	
 	private String code,type,details;

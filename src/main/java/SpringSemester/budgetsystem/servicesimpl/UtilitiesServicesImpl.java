@@ -1,5 +1,6 @@
 package SpringSemester.budgetsystem.servicesimpl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,28 +16,56 @@ public class UtilitiesServicesImpl implements UtilitiesServices {
 	@Autowired
 	UtilityServiceDao utilityservicedao;
 	
+	
+	
+	public UtilitiesServicesImpl() {
+		
+	}
+	
 	@Override
-	public List<ApplicationData> getIncomeList() {
+	public HashMap<String,String>  getIncomeList() {
 		List<ApplicationData> incomeList = utilityservicedao.retrieveIncomeType();
-		return incomeList;
+		HashMap<String,String> incomeListMap = new HashMap<>();
+	    for(ApplicationData data:incomeList) {
+	    	incomeListMap.put(data.getCode(), data.getType());
+	    }
+	     
+	    		
+		return incomeListMap;
 	}
 
 	@Override
-	public List<ApplicationData> getExpensesLists() {
+	public HashMap<String,String>  getExpensesLists() {
 		List<ApplicationData> expensesList = utilityservicedao.retrieveExpensesType();
-		return expensesList;
+		
+		HashMap<String,String> expensesListMap = new HashMap<>();
+	    for(ApplicationData data:expensesList) {
+	    	expensesListMap.put(data.getCode(), data.getType());
+	    }
+	   
+		return expensesListMap;
 	}
 
 	@Override
-	public List<ApplicationData> getUserProfileType() {
+	public HashMap<String,String>  getUserProfileType() {
 		List<ApplicationData> userprofiletypes = utilityservicedao.retrieveProfileType();
-		return userprofiletypes;
+		HashMap<String,String> userProfiletypesMap = new HashMap<>();
+	    for(ApplicationData data:userprofiletypes) {
+	    	userProfiletypesMap.put(data.getCode(), data.getType());
+	    }
+
+		return userProfiletypesMap;
 	}
 
 	@Override
-	public List<ApplicationData> getSecurityQuestion() {
+	public HashMap<String,String> getSecurityQuestion() {
 		List<ApplicationData> securityquestions = utilityservicedao.retrieveSecurityQuestions();
-		return securityquestions;
+	    HashMap<String,String> securityQuestionsMap = new HashMap<>();
+	    for(ApplicationData data:securityquestions) {
+	    	securityQuestionsMap.put(data.getCode(), data.getDetails());
+	    }
+	    
+		return securityQuestionsMap;
 		
 	}
 

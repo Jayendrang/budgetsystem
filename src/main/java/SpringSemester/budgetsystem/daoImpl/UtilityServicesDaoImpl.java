@@ -64,7 +64,7 @@ public class UtilityServicesDaoImpl implements UtilityServiceDao {
 	@Override
 	public List<ApplicationData> retrieveSecurityQuestions() {
 		try {
-			String retrieveSecQuestions="select code,type from app_data where type='SECQUES' order by code";
+			String retrieveSecQuestions="select code,type,details from app_data where type='SECQUES' order by code";
 			List<ApplicationData> incomeTypes = template.queryForObject(retrieveSecQuestions,new appDataInfoMapper()); 
 			return incomeTypes;
 			}catch(Exception ex) {
@@ -80,13 +80,12 @@ public class UtilityServicesDaoImpl implements UtilityServiceDao {
 		
 			List<ApplicationData> utilities = new ArrayList<ApplicationData>();
 			while(rs.next()) {
-				ApplicationData utility = new ApplicationData();
+			ApplicationData utility = new ApplicationData();
 			utility.setCode(rs.getString("code"));
 			utility.setType(rs.getString("type"));
+			utility.setDetails(rs.getString("details"));
 			utilities.add(utility);	
-				
 			}
-			
 			return utilities;
 		}
 

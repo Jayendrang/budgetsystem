@@ -3,6 +3,8 @@ package SpringSemester.budgetsystem.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,10 @@ public class ExpensesController {
 	}
 
 	@RequestMapping(value = "/expenseshome", method = RequestMethod.GET)
-	public String getExpensesHome(ModelMap model, HttpSession httpSession) {
+	public String getExpensesHome(ModelMap model, HttpServletRequest httpRequest) {
 		try {
+			HttpSession httpSession = httpRequest.getSession();
+
 			if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
 				List<Expenses> listofExpenses = new ArrayList<>();
 				model.addAttribute("expenses_bean", new Expenses());
@@ -43,7 +47,7 @@ public class ExpensesController {
 				model.addAttribute("expenses_list_bean", listofExpenses);
 				return "exepensesHome";
 			} else {
-				//redirect:/
+				// redirect:/
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -53,58 +57,71 @@ public class ExpensesController {
 	}
 
 	@RequestMapping(value = "/getallexpenses", method = RequestMethod.GET)
-	public String getExpenses(HttpSession httpSession, Model model) {
-		if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
+	public String getExpenses(HttpServletRequest httpRequest, ModelMap model) {
+		try {
+			HttpSession httpSession = httpRequest.getSession();
 
-			SessionInfo session = new SessionInfo();
-			session.setUserName(httpSession.getAttribute("user_id").toString());
-			List<Expenses> expenseslist = expensesservices.getAllExpenses(session);
-			if (!expenseslist.isEmpty()) {
-				model.addAttribute("expenseslist", expenseslist);
+			if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
+
+				SessionInfo session = new SessionInfo();
+				session.setUserName(httpSession.getAttribute("user_id").toString());
+				List<Expenses> expenseslist = expensesservices.getAllExpenses(session);
+				if (!expenseslist.isEmpty()) {
+					model.addAttribute("expenseslist", expenseslist);
+				} else {
+
+				}
 			} else {
 
 			}
-		} else {
-
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		return null;
 	}
 
 	@RequestMapping(value = "/getexpensesbydate", method = RequestMethod.GET)
 	public String getExpensesByDate(@ModelAttribute String fromDate, @ModelAttribute String toDate,
-			HttpSession httpSession, Model model) {
-		if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
-			SessionInfo session = new SessionInfo();
-			session.setUserName(httpSession.getAttribute("user_id").toString());
-			List<Expenses> expensesList = expensesservices.getExpensesByDate(fromDate, toDate, session);
-			if (!expensesList.isEmpty()) {
-				model.addAttribute("expenses_list", expensesList);
+			HttpServletRequest httpServletRequest, Model model) {
+
+		try {
+			HttpSession httpSession = httpServletRequest.getSession();
+			if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
+				SessionInfo session = new SessionInfo();
+				session.setUserName(httpSession.getAttribute("user_id").toString());
+				List<Expenses> expensesList = expensesservices.getExpensesByDate(fromDate, toDate, session);
+				if (!expensesList.isEmpty()) {
+					model.addAttribute("expenses_list", expensesList);
+				} else {
+
+				}
 			} else {
 
 			}
-		} else {
-
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		return null;
 	}
 
 	@RequestMapping(value = "/removeexpenses", method = RequestMethod.POST)
-	public String removeExpenses(@ModelAttribute List<Expenses> expenseslist, HttpSession httpSession) {
+	public String removeExpenses(@ModelAttribute List<Expenses> expenseslist, HttpServletRequest httpServletRequest) {
 		try {
-			if(!httpSession.getAttribute("user_id").toString().isEmpty()) {
+			HttpSession httpSession = httpServletRequest.getSession();
+			if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
 				SessionInfo session = new SessionInfo();
 				session.setUserName(httpSession.getAttribute("user_id").toString());
-			boolean status = expensesservices.removeListOfExpenses(expenseslist, session);
-			if (status) {
-				// redirect to home page
-				redirectController("");
-				return null;
+				boolean status = expensesservices.removeListOfExpenses(expenseslist, session);
+				if (status) {
+					// redirect to home page
+					redirectController("");
+					return null;
+				} else {
+					// redirect to error page
+					redirectController("");
+				}
 			} else {
-				// redirect to error page
-				redirectController("");
-			}
-			}else {
-				
+
 			}
 
 		} catch (Exception ex) {
@@ -114,56 +131,62 @@ public class ExpensesController {
 	}
 
 	@RequestMapping(value = "/addexpenses", method = RequestMethod.POST)
-	public String addExpenses(@ModelAttribute List<Expenses> expenseslist,HttpSession httpSession,
-			Model model) {
-		
-		if((!httpSession.getAttribute("user_id").toString().isEmpty())&&(!expenseslist.isEmpty())) {
-			
-			SessionInfo session = new SessionInfo();
-			session.setUserName(httpSession.getAttribute("user_id").toString());
-			boolean result = expensesservices.addExpenses(expenseslist, session);
-		
-		if (result) {
-			// calling get expenses servlet for routing
-			getExpenses(httpSession, model);
+	public String addExpenses(@ModelAttribute List<Expenses> expenseslist, HttpServletRequest httpServletRequest,
+			ModelMap model) {
+		SessionInfo session = new SessionInfo();
 
-		} else {
-			// redirect to error page
-			redirectController("");
+		try {
+			HttpSession httpSession = httpServletRequest.getSession();
+			if ((!httpSession.getAttribute("user_id").toString().isEmpty()) && (!expenseslist.isEmpty())) {
+
+				session.setUserName(httpSession.getAttribute("user_id").toString());
+				boolean result = expensesservices.addExpenses(expenseslist, session);
+
+				if (result) {
+					// calling get expenses servlet for routing
+					httpServletRequest.getSession().setAttribute("user_id", session.getUserName());
+					getExpenses(httpServletRequest, model);
+
+				} else {
+					// redirect to error page
+					redirectController("");
+				}
+			} else {
+
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		}else {
-			
-		}
-		
 		return null;
 	}
 
 	@RequestMapping(value = "/modifyexpenses", method = RequestMethod.POST)
-	public String modifyExpenses(@ModelAttribute Expenses expenses,HttpSession httpSession, Model model) {
+	public String modifyExpenses(@ModelAttribute Expenses expenses, HttpServletRequest httpServletRequest,
+			ModelMap model) {
 
 		boolean status = false;
-		
+
 		try {
-			if(!httpSession.getAttribute("user_id").toString().isEmpty())
-			{
+			HttpSession httpSession = httpServletRequest.getSession();
+			if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
 				SessionInfo session = new SessionInfo();
 				session.setUserName(httpSession.getAttribute("user_id").toString());
 				status = expensesservices.modifyExpenses(expenses, session);
-				if(status) {
+				if (status) {
 					// calling get expenses servlet for routing
-					getExpenses(httpSession, model);
-				}else {
-					
+					httpServletRequest.getSession().setAttribute("user_id", session.getUserName());
+					getExpenses(httpServletRequest, model);
+				} else {
+
 				}
 			}
-			
+
 		} catch (Exception ex) {
 		}
 
 		return null;
 
 	}
-	
 
 	public ModelAndView redirectController(String url) {
 		return new ModelAndView(url);
