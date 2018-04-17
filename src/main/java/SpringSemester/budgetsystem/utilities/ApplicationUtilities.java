@@ -40,6 +40,7 @@ public class ApplicationUtilities {
 		return sysMonth;
 	}
 	
+	//First date of three month
 	public static String[] getFirstDateThreeMonths(int month) {
 String [] sysMonth = new String[3];
 		
@@ -68,7 +69,6 @@ String [] sysMonth = new String[3];
 	
 	// Current Date
 	public static String getCurrentDate() {
-
 		SimpleDateFormat currentDate = new SimpleDateFormat("YYYY-MM-dd");
 		Date date = new Date();
 		return currentDate.format(date).toString();
