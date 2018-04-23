@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import SpringSemester.budgetsystem.beans.ApplicationData;
 import SpringSemester.budgetsystem.beans.Expenses;
 import SpringSemester.budgetsystem.beans.SessionInfo;
 import SpringSemester.budgetsystem.services.ExpensesServices;
@@ -58,7 +59,7 @@ public class ExpensesController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/getallexpenses", method = RequestMethod.GET)
-	public String getExpenses(HttpServletRequest httpRequest,HttpServletResponse httpResponse, ModelMap model) {
+	public void getExpenses(HttpServletRequest httpRequest,HttpServletResponse httpResponse) {
 		try {
 			System.out.println("inside controller");
 			HttpSession httpSession = httpRequest.getSession();
@@ -70,18 +71,21 @@ public class ExpensesController extends HttpServlet {
 				List<Expenses> expenseslist = expensesservices.getAllExpenses(session);
 				System.out.println(expenseslist.size());
 				if (!expenseslist.isEmpty()) {
-					model.addAttribute("expenseslist", expenseslist);
+					httpRequest.setAttribute("expenseslist", expenseslist);
 					System.out.println("binding expenseslists");
-					return "expenses_home";
-				} 
-			} else {
-
-					return "expenses_home";
+					httpRequest.getRequestDispatcher("/WEB-INF/views/expenses_home.jsp").forward(httpRequest, httpResponse);
+				}else {
+					
+					httpRequest.setAttribute("expenseslist", "Records not found");
+					httpRequest.getRequestDispatcher("/WEB-INF/views/expenses_home.jsp").forward(httpRequest, httpResponse);
+				}
+			}else {
+				httpRequest.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(httpRequest, httpResponse);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return "expenses_home";
+	
 	}
 
 	@RequestMapping(value = "/getexpensesbydate", method = RequestMethod.GET)
@@ -97,7 +101,7 @@ public class ExpensesController extends HttpServlet {
 				if (!expensesList.isEmpty()) {
 					model.addAttribute("expenses_list", expensesList);
 				} else {
-
+					 	
 				}
 			} else {
 
@@ -136,20 +140,29 @@ public class ExpensesController extends HttpServlet {
 
 	@RequestMapping(value = "/addexpenses", method = RequestMethod.POST)
 	public String addExpenses(@ModelAttribute List<Expenses> expenseslist, HttpServletRequest httpServletRequest,
-			ModelMap model) {
+			HttpServletResponse httpServletResponse,ModelMap model) {
 		SessionInfo session = new SessionInfo();
 
 		try {
 			HttpSession httpSession = httpServletRequest.getSession();
+			httpSession.setAttribute("user_id","GuMPnZqYSe");
+			
 			if ((!httpSession.getAttribute("user_id").toString().isEmpty()) && (!expenseslist.isEmpty())) {
-
+				Expenses expenses = new Expenses();
+				expenses.setExpenses_date(httpServletRequest.getParameter("expensedate").toString());
+				expenses.setExpenses_name(httpServletRequest.getParameter("expensename").toString());
+				expenses.setExpenses_type(httpServletRequest.getParameter("").toString());
+				expenses.setAmount(httpServletRequest.getParameter("").toString());
+				expenses.setUser_id(httpSession.getAttribute("user_id").toString());
+				expenses.setExpenses_desc(httpServletRequest.getParameter("expensedesc").toString());
+				expenses.setRemark(httpServletRequest.getParameter("expenseremark").toString());
 				session.setUserName(httpSession.getAttribute("user_id").toString());
 				boolean result = expensesservices.addExpenses(expenseslist, session);
 
 				if (result) {
 					// calling get expenses servlet for routing
 					httpServletRequest.getSession().setAttribute("user_id", session.getUserName());
-					getExpenses(httpServletRequest,null, model);
+					getExpenses(httpServletRequest,httpServletResponse);
 
 				} else {
 					// redirect to error page
@@ -166,7 +179,7 @@ public class ExpensesController extends HttpServlet {
 
 	@RequestMapping(value = "/modifyexpenses", method = RequestMethod.POST)
 	public String modifyExpenses(@ModelAttribute Expenses expenses, HttpServletRequest httpServletRequest,
-			ModelMap model) {
+			HttpServletResponse httpServletResponse, ModelMap model) {
 
 		boolean status = false;
 
@@ -179,7 +192,7 @@ public class ExpensesController extends HttpServlet {
 				if (status) {
 					// calling get expenses servlet for routing
 					httpServletRequest.getSession().setAttribute("user_id", session.getUserName());
-					getExpenses(httpServletRequest,null, model);
+					getExpenses(httpServletRequest,httpServletResponse);
 				} else {
 
 				}
@@ -187,9 +200,8 @@ public class ExpensesController extends HttpServlet {
 
 		} catch (Exception ex) {
 		}
-
 		return null;
-
+		
 	}
 
 	
@@ -208,7 +220,8 @@ public class ExpensesController extends HttpServlet {
 			if(expenseslist!=null)
 			{
 				httprequest.setAttribute("expeneslist",expenseslist);
-				httprequest.getRequestDispatcher("/WEB-INF/views/expenses_home.jsp").forward(httprequest, httpresponse);
+				httprequest.setAttribute("applicationdata",utilityservices.getExpensesLists());
+				httprequest.getRequestDispatcher("/WEB-INF/views/addNewExpenses.jsp").forward(httprequest, httpresponse);
 			}
 		}catch(Exception ex) {
 			ex.printStackTrace();

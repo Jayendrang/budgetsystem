@@ -41,7 +41,7 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 				session.getUserName(),
 				expense.getExpenses_date(),
 				expense.getExpenses_name(),
-				expense.getExpneses_type(),
+				expense.getExpenses_type(),
 				expense.getExpenses_desc(),
 				Double.parseDouble(expense.getAmount()),
 				expense.getRemark(),
@@ -65,7 +65,7 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 			int status = template.update(udpateQueryExpenses,new Object[] {
 					expenses.getExpenses_date(),
 					expenses.getExpenses_name(),
-					expenses.getExpneses_type(),
+					expenses.getExpenses_type(),
 					expenses.getExpenses_desc(),
 					Double.parseDouble(expenses.getAmount()),
 					expenses.getRemark(),
@@ -84,7 +84,7 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 
 	@Override
 	public List<Expenses> retrieveAllExpenses(SessionInfo session) {
-		String selectAllExpenses="select expenses_id,expenses_date,expenses_name,expenses_type,expenses_desc,amount,remark from sor_expenses where user_id=?";
+		String selectAllExpenses="select expenses_id,expenses_date,expenses_name,expenses_type,expenses_desc,amount,remark,created_on from sor_expenses where user_id=?";
 		List<Expenses> expensesList = new ArrayList<>();
 		try {
 			expensesList = template.queryForObject(selectAllExpenses, new Object[] {session.getUserName()},new ExpensesDataMapper());
@@ -96,7 +96,7 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 
 	@Override
 	public List<Expenses> retrieveExpensesByDate(String fromDate, String toDate, SessionInfo session) {
-		String selectExepenseDate="select expenses_id,expenses_date,expenses_name,expenses_type,expenses_desc,amount,remark from sor_expenses where user_id=? and expenses_date between ? and ? ;";
+		String selectExepenseDate="select expenses_id,expenses_date,expenses_name,expenses_type,expenses_desc,amount,remark,created_on from sor_expenses where user_id=? and expenses_date between ? and ? ;";
 		List<Expenses> expensesList = new ArrayList<>();
 		try {
 			expensesList = template.queryForObject(selectExepenseDate, new Object[] {session.getUserName(),fromDate,toDate}, new ExpensesDataMapper());
@@ -137,10 +137,12 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 			expense.setExpenses_id(resultset.getString("expenses_id"));
 			expense.setExpenses_date(resultset.getString("expenses_date"));
 			expense.setExpenses_name(resultset.getString("expenses_name"));
-			expense.setExpneses_type(resultset.getString("expenses_type"));
+			expense.setExpenses_type(resultset.getString("expenses_type"));
 			expense.setExpenses_desc(resultset.getString("expenses_desc"));
 			expense.setAmount(String.valueOf(resultset.getDouble("amount")));
 			expense.setRemark(resultset.getString("remark"));
+			expense.setCreated_on(resultset.getString("created_on"));
+			
 			expensesList.add(expense);
 			}
 			return expensesList;

@@ -28,7 +28,7 @@ public class UtilityServicesDaoImpl implements UtilityServiceDao {
 	@Override
 	public List<ApplicationData> retrieveIncomeType() {
 		try {
-		String retrieveIncomeQuery="select code,type from app_data where type like 'ITYP%' order by type";
+		String retrieveIncomeQuery="select code,type,details from app_data where type like 'ITYP%' order by type";
 		List<ApplicationData> incomeTypes = template.queryForObject(retrieveIncomeQuery,new appDataInfoMapper()); 
 		return incomeTypes;
 		}catch(Exception ex) {
@@ -40,7 +40,7 @@ public class UtilityServicesDaoImpl implements UtilityServiceDao {
 	@Override
 	public List<ApplicationData> retrieveExpensesType() {
 		try {
-			String retrieveExpensesQuery="select code,type from app_data where type like 'ETYP%' order by type";
+			String retrieveExpensesQuery="select code,type,details from app_data where type like 'ETYP%' order by type";
 			List<ApplicationData> incomeTypes = template.queryForObject(retrieveExpensesQuery,new appDataInfoMapper()); 
 			return incomeTypes;
 			}catch(Exception ex) {
@@ -52,7 +52,7 @@ public class UtilityServicesDaoImpl implements UtilityServiceDao {
 	@Override
 	public List<ApplicationData> retrieveProfileType() {
 		try {
-			String retrieveProfileType="select code,type from app_data where type ='PROFILE' order by type";
+			String retrieveProfileType="select code,type,details from app_data where type ='PROFILE' order by type";
 			List<ApplicationData> incomeTypes = template.queryForObject(retrieveProfileType,new appDataInfoMapper()); 
 			return incomeTypes;
 			}catch(Exception ex) {

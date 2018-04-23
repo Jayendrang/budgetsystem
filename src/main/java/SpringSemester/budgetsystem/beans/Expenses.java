@@ -5,20 +5,18 @@ import java.util.List;
 
 public class Expenses {
 	
-private String expenses_id,user_id,expenses_date,expneses_type,expenses_name,expenses_desc,amount,remark;
-private List<Expenses> lisofExpenses = new ArrayList<Expenses>();
+private String expenses_id,user_id,expenses_date,expenses_type,expenses_name,expenses_desc,amount,remark,created_on;
+public String getCreated_on() {
+	return created_on;
+}
+
+public void setCreated_on(String created_on) {
+	this.created_on = created_on;
+}
 
 public Expenses() {
 	System.out.println("Bean Expenses -- Loaded()");
 	
-}
-
-public List<Expenses> getExpensesList() {
-	return lisofExpenses;
-}
-
-public void setExpensesList(List<Expenses> expensesList) {
-	this.lisofExpenses = expensesList;
 }
 
 public String getExpenses_id() {
@@ -45,20 +43,20 @@ public void setExpenses_date(String expenses_date) {
 	this.expenses_date = expenses_date;
 }
 
-public String getExpneses_type() {
-	return expneses_type;
+public String getExpenses_type() {
+	return expenses_type;
 }
 
-public void setExpneses_type(String expneses_type) {
-	this.expneses_type = expneses_type;
+public void setExpenses_type(String expenses_type) {
+	this.expenses_type = expenses_type;
 }
 
 public String getExpenses_name() {
 	return expenses_name;
 }
 
-public void setExpenses_name(String expenses_category) {
-	this.expenses_name = expenses_category;
+public void setExpenses_name(String expenses_name) {
+	this.expenses_name = expenses_name;
 }
 
 public String getExpenses_desc() {
@@ -84,6 +82,5 @@ public String getRemark() {
 public void setRemark(String remark) {
 	this.remark = remark;
 }
-
 
 }
