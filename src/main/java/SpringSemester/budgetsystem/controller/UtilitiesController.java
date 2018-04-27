@@ -25,8 +25,8 @@ public class UtilitiesController {
 	@RequestMapping(value="/getExpensesType", method=RequestMethod.GET)
 	public String getExpensesType() {
 		Model model = null;
-		HashMap<String,String> expensestype= utilityservices.getExpensesLists();
-		model.addAttribute("expensestype",expensestype);
+		//HashMap<String,String> expensestype= utilityservices.getExpensesLists();
+		//model.addAttribute("expensestype",expensestype);
 		return "expenses";
 	}
 	

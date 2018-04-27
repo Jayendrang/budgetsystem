@@ -217,11 +217,12 @@ public class ExpensesController extends HttpServlet {
 			SessionInfo session = new SessionInfo();
 			session.setUserName("GuMPnZqYSe");
 			List<Expenses> expenseslist = expensesservices.getAllExpenses(session);
+			String data = "Naathari";
 			if(expenseslist!=null)
 			{
-				httprequest.setAttribute("expeneslist",expenseslist);
+				httprequest.setAttribute("expenselist",expenseslist);
 				httprequest.setAttribute("applicationdata",utilityservices.getExpensesLists());
-				httprequest.getRequestDispatcher("/WEB-INF/views/addNewExpenses.jsp").forward(httprequest, httpresponse);
+				httprequest.getRequestDispatcher("/WEB-INF/views/expenses.jsp").forward(httprequest, httpresponse);
 			}
 		}catch(Exception ex) {
 			ex.printStackTrace();

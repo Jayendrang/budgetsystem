@@ -35,15 +35,20 @@ public class UtilitiesServicesImpl implements UtilitiesServices {
 	}
 
 	@Override
-	public HashMap<String,String>  getExpensesLists() {
+	public String[]  getExpensesLists() {
 		List<ApplicationData> expensesList = utilityservicedao.retrieveExpensesType();
 		
-		HashMap<String,String> expensesListMap = new HashMap<>();
-	    for(ApplicationData data:expensesList) {
-	    	expensesListMap.put(data.getCode(), data.getType());
-	    }
-	   
-		return expensesListMap;
+//		HashMap<String,String> expensesListMap = new HashMap<>();
+//	    for(ApplicationData data:expensesList) {
+//	    	expensesListMap.put(data.getCode(), data.getType());
+//	    }
+		String [] arrayOfExpenses=new String[expensesList.size()];
+		int i=0;
+		for(ApplicationData data : expensesList) {
+			arrayOfExpenses[i]=data.getCode();
+			i++;
+		}
+	   return arrayOfExpenses;
 	}
 
 	@Override
