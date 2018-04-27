@@ -4,11 +4,14 @@
 <tags:template>
 	<jsp:attribute name="head">  
 		<script type="text/javascript">
-			// inline JavaScript here 
+		 
 		</script>
   	</jsp:attribute>  
 	<jsp:body>
-		<h1>Hello <c:out value="${ name }" /></h1>
+	<% String user_id=request.getAttribute("user_id").toString(); 
+		
+	%>
+		<h1>Hello <c:out value="${ user_id }" /></h1>
 		<p>This is just an example page.</p>
 	</jsp:body>
 </tags:template>
