@@ -7,9 +7,9 @@ import SpringSemester.budgetsystem.beans.ApplicationData;
 
 public interface  UtilitiesServices {
 		
-	public HashMap<String,String> getIncomeList();
+	public String[] getIncomeList();
 	public String[] getExpensesLists();
-	public HashMap<String,String> getUserProfileType();
-	public HashMap<String,String> getSecurityQuestion();
+	public String[] getUserProfileType();
+	public String[] getSecurityQuestion();
 	
 }

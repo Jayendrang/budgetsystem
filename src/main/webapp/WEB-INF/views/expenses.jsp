@@ -102,8 +102,8 @@ td, th {
 </head>
 
 <body>
-	<form id="expense-input">
-<% String[] values=(String[])request.getAttribute("applicationdata"); %>
+	<form id="expense-input"  action="${pageContext.request.contextPath}/expenses/addexpenses" method="POST">
+	<% String[] values=(String[])request.getAttribute("applicationdata"); %>
          <table id="expense-table">
             <tr>
                <th>Date</th>
@@ -114,12 +114,12 @@ td, th {
                <th></th>
             </tr>
 			<tr>
-				<td><input id="date1" class="expense-date" type="date" name="date-value"></td>
+				<td><input type="date" id="date1" class="expense-date" type="date" name="date-value"></td>
 				<td>
-					<select id="dropdown1" class="expense-type">
+					<select id="dropdown1" name="expenses_category" class="expense-type"/>
 				</td>
 				<td><textarea class="expense-desc" id="desc1" name="expense-desc" form="expense-input">Enter description here...</textarea></td>
-				<td><input class="expense-amount" id="amount1" type="text" name="expense-amt"></td>
+				<td><input type="text" class="expense-amount" id="amount1"  name="expense-amt"></td>
 				<td><textarea class="expense-remarks" id="remarks1" name="remarks" form="expense-input">Enter remarks here...</textarea></td>
 				<td class="operations-field">
 					<span class="close">X</span>
@@ -127,6 +127,7 @@ td, th {
 				</td>
 			</tr>
          </table>
+         <input type="submit" name="AddExpenses" value="Save expenses" />
       </form>
   <!-- <script src="/budgetsystem/src/main/webapp/WEB-INF/js/scripts.js"></script>-->
    <script type="text/javascript">
@@ -138,7 +139,7 @@ td, th {
    <%}%>
    
 	
-	alert(expenseList);
+	
    </script>
    
   
@@ -159,7 +160,7 @@ td, th {
 	for(var a=0;a<typeFieldsList.length;a++){
 		var select = typeFieldsList[a];
 		for(var b=0;b<expenseList.length;b++){
-			select.options[select.options.length] = new Option(expenseList[b], b);
+			select.options[select.options.length] = new Option(expenseList[b], expenseList[b]);
 		}
 	}
 	for (var i = 0; i < close.length; i++) {
@@ -190,7 +191,7 @@ td, th {
 	function addElement(){
 	  x=close.length;
 	  x++;
-	  var elemContent = '<tr><td><input id="date'+ x +'" type="date" class="expense-date" name="date-value"></td><td><select id="dropdown'+ x +'" class="expense-type"></select></td><td><textarea id="desc'+ x +'" class="expense-desc" name="expense-desc" form="expense-input">Enter description here...</textarea></td><td><input id="amount'+ x +'" class="expense-amount" type="text" name="expense-amt"></td><td><textarea class="expense-remarks" id="remarks'+ x +'" name="remarks" form="expense-input">Enter remarks here...</textarea></td><td class="operations-field"><span class="close">X</span><span class="add">+</span></td></tr>';
+	  var elemContent = '<tr><td><input id="date'+ x +'" type="date" class="expense-date" name="date-value"></td><td><select id="dropdown'+ x +'" name="expenses_category" class="expense-type"></select></td><td><textarea id="desc'+ x +'" class="expense-desc" name="expense-desc" form="expense-input">Enter description here...</textarea></td><td><input id="amount'+ x +'" class="expense-amount" type="text" name="expense-amt"></td><td><textarea class="expense-remarks" id="remarks'+ x +'" name="remarks" form="expense-input">Enter remarks here...</textarea></td><td class="operations-field"><span class="close">X</span><span class="add">+</span></td></tr>';
 	  var expenseTable = document.getElementById('expense-table');
 	  expenseTable.insertAdjacentHTML('beforeend', elemContent);
 	  
@@ -203,7 +204,7 @@ td, th {
 	  }
 	  var selectVal = document.getElementById('dropdown'+x);
 	  for(var d=0;d<expenseList.length;d++){
-		selectVal.options[selectVal.options.length] = new Option(expenseList[d], d);
+		selectVal.options[selectVal.options.length] = new Option(expenseList[d], expenseList[d]);
 	  }
 
 	  for (var l = 0; l < close.length; l++) {

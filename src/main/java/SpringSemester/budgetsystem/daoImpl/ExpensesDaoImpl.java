@@ -31,6 +31,7 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 	public boolean addExpenses(List<Expenses> expenses,SessionInfo session) {
 		int status=0;
 		boolean result=false;
+		System.out.println("from dao"+expenses.size());
 		
 		try {
 		for(Expenses expense : expenses) {

@@ -3,6 +3,7 @@ package SpringSemester.budgetsystem.utilities;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -13,7 +14,11 @@ public class ApplicationUtilities {
 	public static String INACTIVE_STATUS="INACTIVE";
 	public static String USER_TYPE_GENERAL="GNUSR";
 	public static String USER_TYPE_ADMIN="ADMIN";
-
+	private static HashMap<String,String> expensesListMap = new HashMap<>();
+	private static HashMap<String,String> incomeListMap = new HashMap<>();
+    private static HashMap<String,String> userProfiletypesMap = new HashMap<>();
+    private static HashMap<String,String> securityQuestionsMap = new HashMap<>();
+    
 	//Last date of 3 months
 	public static String[]  getLastDateThreeMonths(int month) {
 		String [] sysMonth = new String[3];
@@ -110,6 +115,40 @@ String [] sysMonth = new String[3];
 		return expensesID.toString();
 	}
 
+	
+	
+	public static String getExpensesListMap(String key) {
+		return (String)expensesListMap.get(key);
+	}
+
+	public void setExpensesListMap(HashMap<String, String> expensesListMap) {
+		this.expensesListMap = expensesListMap;
+	}
+
+	public String getIncomeListMap(String key) {
+		return (String)incomeListMap.get(key);
+	}
+
+	public void setIncomeListMap(HashMap<String, String> incomeListMap) {
+		this.incomeListMap = incomeListMap;
+	}
+
+	public String getUserProfiletypesMap(String key) {
+		return (String)userProfiletypesMap.get(key);
+	}
+
+	public void setUserProfiletypesMap(HashMap<String, String> userProfiletypesMap) {
+		this.userProfiletypesMap = userProfiletypesMap;
+	}
+
+	public String getSecurityQuestionsMap(String key) {
+		return securityQuestionsMap.get(key);
+	}
+
+	public void setSecurityQuestionsMap(HashMap<String, String> securityQuestionsMap) {
+		this.securityQuestionsMap = securityQuestionsMap;
+	}
+
 	public static void main(String[] arg) {
 //		System.out.println(ApplicationUtilities.getCurrentDate());
 //		System.out.println(ApplicationUtilities.getCurrentDateAndTime());
@@ -121,3 +160,4 @@ String [] sysMonth = new String[3];
 		ApplicationUtilities.getLastDateThreeMonths(Calendar.MONTH);
 		}
 }
+

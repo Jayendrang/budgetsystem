@@ -1,7 +1,11 @@
 package SpringSemester.budgetsystem.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -22,6 +27,7 @@ import SpringSemester.budgetsystem.beans.Expenses;
 import SpringSemester.budgetsystem.beans.SessionInfo;
 import SpringSemester.budgetsystem.services.ExpensesServices;
 import SpringSemester.budgetsystem.services.UtilitiesServices;
+import SpringSemester.budgetsystem.utilities.ApplicationUtilities;
 
 @Controller
 @RequestMapping(value = "/expenses")
@@ -50,7 +56,7 @@ public class ExpensesController extends HttpServlet {
 				return "exepenses_home";
 			} else {
 				return "expenses_home";
-				}
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -59,11 +65,11 @@ public class ExpensesController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/getallexpenses", method = RequestMethod.GET)
-	public void getExpenses(HttpServletRequest httpRequest,HttpServletResponse httpResponse) {
+	public void getExpenses(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
 		try {
 			System.out.println("inside controller");
 			HttpSession httpSession = httpRequest.getSession();
-			httpSession.setAttribute("user_id","GuMPnZqYSe");
+			httpSession.setAttribute("user_id", "GuMPnZqYSe");
 			if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
 
 				SessionInfo session = new SessionInfo();
@@ -73,19 +79,21 @@ public class ExpensesController extends HttpServlet {
 				if (!expenseslist.isEmpty()) {
 					httpRequest.setAttribute("expenseslist", expenseslist);
 					System.out.println("binding expenseslists");
-					httpRequest.getRequestDispatcher("/WEB-INF/views/expenses_home.jsp").forward(httpRequest, httpResponse);
-				}else {
-					
+					httpRequest.getRequestDispatcher("/WEB-INF/views/expenses_home.jsp").forward(httpRequest,
+							httpResponse);
+				} else {
+
 					httpRequest.setAttribute("expenseslist", "Records not found");
-					httpRequest.getRequestDispatcher("/WEB-INF/views/expenses_home.jsp").forward(httpRequest, httpResponse);
+					httpRequest.getRequestDispatcher("/WEB-INF/views/expenses_home.jsp").forward(httpRequest,
+							httpResponse);
 				}
-			}else {
+			} else {
 				httpRequest.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(httpRequest, httpResponse);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-	
+
 	}
 
 	@RequestMapping(value = "/getexpensesbydate", method = RequestMethod.GET)
@@ -101,7 +109,7 @@ public class ExpensesController extends HttpServlet {
 				if (!expensesList.isEmpty()) {
 					model.addAttribute("expenses_list", expensesList);
 				} else {
-					 	
+
 				}
 			} else {
 
@@ -139,37 +147,78 @@ public class ExpensesController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/addexpenses", method = RequestMethod.POST)
-	public String addExpenses(@ModelAttribute List<Expenses> expenseslist, HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse,ModelMap model) {
+	public String addExpenses(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			ModelMap model) {
 		SessionInfo session = new SessionInfo();
-
+		String[] date = null;
+		String[] category = null;
+		String[] desc = null;
+		String[] amount = null;
+		String[] remarks = null;
+		List<Expenses> expensesList = new ArrayList<>();
 		try {
 			HttpSession httpSession = httpServletRequest.getSession();
-			httpSession.setAttribute("user_id","GuMPnZqYSe");
+			httpSession.setAttribute("user_id", "GuMPnZqYSe");
 			
-			if ((!httpSession.getAttribute("user_id").toString().isEmpty()) && (!expenseslist.isEmpty())) {
-				Expenses expenses = new Expenses();
-				expenses.setExpenses_date(httpServletRequest.getParameter("expensedate").toString());
-				expenses.setExpenses_name(httpServletRequest.getParameter("expensename").toString());
-				expenses.setExpenses_type(httpServletRequest.getParameter("").toString());
-				expenses.setAmount(httpServletRequest.getParameter("").toString());
-				expenses.setUser_id(httpSession.getAttribute("user_id").toString());
-				expenses.setExpenses_desc(httpServletRequest.getParameter("expensedesc").toString());
-				expenses.setRemark(httpServletRequest.getParameter("expenseremark").toString());
+			if ((!httpSession.getAttribute("user_id").toString().isEmpty())) {
 				session.setUserName(httpSession.getAttribute("user_id").toString());
-				boolean result = expensesservices.addExpenses(expenseslist, session);
+				Map<String, String[]> pagedata = httpServletRequest.getParameterMap();
+				Set setData = pagedata.entrySet();
+				Iterator setItr = setData.iterator();
+				while (setItr.hasNext()) {
+					Map.Entry<String, String[]> entry = (Entry<String, String[]>) setItr.next();
+					String paramName = entry.getKey();
+					String[] paramValues = entry.getValue();
+					
+					switch (paramName) {
 
-				if (result) {
-					// calling get expenses servlet for routing
-					httpServletRequest.getSession().setAttribute("user_id", session.getUserName());
-					getExpenses(httpServletRequest,httpServletResponse);
-
-				} else {
-					// redirect to error page
-					redirectController("");
+					case "date-value": {
+						System.out.println("Date");
+						date = new String[paramValues.length];
+						date = paramValues;
+						continue;
+					}
+					case "expenses_category": {
+						System.out.println("Cat");
+						category= new String[paramValues.length];
+						category = paramValues;
+						continue;
+					}
+					case "expense-desc": {
+						System.out.println("Desc");
+						desc = new String[paramValues.length];
+						desc = paramValues;
+						continue;
+					}
+					case "expense-amt": {
+						System.out.println("amount");
+						amount = new String[paramValues.length];
+						amount = paramValues;
+						continue;
+					}
+					case "remarks":
+					{
+						System.out.println("Remark");
+						remarks = new String[paramValues.length];
+						remarks = paramValues;
+						continue;
+					}
 				}
-			} else {
+					for (int s = 0; s < date.length; s++) {
+						System.out.println(	date[s] + "--" + category[s] + "--" + desc[s] + "--" + amount[s] + "--" + remarks[s]);
+						Expenses expenses = new Expenses();
+						expenses.setExpenses_date(date[s]);
+						expenses.setExpenses_name(category[s]);
+						expenses.setExpenses_desc(desc[s]);
+						expenses.setExpenses_type(ApplicationUtilities.getExpensesListMap(category[s]));
+						expenses.setAmount(amount[s]);
+						expenses.setRemark(remarks[s]);
+						expensesList.add(expenses);
+					}
 
+				}
+				System.out.println(expensesservices.addExpenses(expensesList, session));
+			} else {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -192,7 +241,7 @@ public class ExpensesController extends HttpServlet {
 				if (status) {
 					// calling get expenses servlet for routing
 					httpServletRequest.getSession().setAttribute("user_id", session.getUserName());
-					getExpenses(httpServletRequest,httpServletResponse);
+					getExpenses(httpServletRequest, httpServletResponse);
 				} else {
 
 				}
@@ -201,30 +250,27 @@ public class ExpensesController extends HttpServlet {
 		} catch (Exception ex) {
 		}
 		return null;
-		
+
 	}
 
-	
 	public ModelAndView redirectController(String url) {
 		return new ModelAndView(url);
 	}
 
-	@RequestMapping(value="/servExpenses" , method=RequestMethod.GET)
-	public void retireveExpensesfromDb(HttpServletRequest httprequest,HttpServletResponse httpresponse, Model model) {
-		
+	@RequestMapping(value = "/servExpenses", method = RequestMethod.GET)
+	public void retireveExpensesfromDb(HttpServletRequest httprequest, HttpServletResponse httpresponse, Model model) {
+
 		System.out.println("new non spring servlet");
 		try {
 			SessionInfo session = new SessionInfo();
 			session.setUserName("GuMPnZqYSe");
 			List<Expenses> expenseslist = expensesservices.getAllExpenses(session);
-			String data = "Naathari";
-			if(expenseslist!=null)
-			{
-				httprequest.setAttribute("expenselist",expenseslist);
-				httprequest.setAttribute("applicationdata",utilityservices.getExpensesLists());
+			if (expenseslist != null) {
+				httprequest.setAttribute("expenselist", expenseslist);
+				httprequest.setAttribute("applicationdata", utilityservices.getExpensesLists());
 				httprequest.getRequestDispatcher("/WEB-INF/views/expenses.jsp").forward(httprequest, httpresponse);
 			}
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}

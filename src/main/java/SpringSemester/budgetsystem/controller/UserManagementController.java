@@ -46,7 +46,7 @@ public class UserManagementController {
 	@RequestMapping(value="/newUserRegistration", method=RequestMethod.GET)
 	public String userRegistration(ModelMap model) {
 	
-		HashMap<String,String> securityQues = utilityservices.getSecurityQuestion();
+		String[] securityQues = utilityservices.getSecurityQuestion();
 		model.addAttribute("UserInfo",new UserInfo());
 		model.addAttribute("securityQues",securityQues);
 		return "userregistration";

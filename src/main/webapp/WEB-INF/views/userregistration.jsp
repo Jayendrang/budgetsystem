@@ -21,15 +21,16 @@
 <div>Mobile Contact : <form:input path="mobile_contact" /></div>
 <div>Address	: <form:input path="address"/></div>
 <div>Password   : <form:password path="password"/></div>
+
 <div>Recovery Question 1: <form:select path="rec1_ques">
 							<c:forEach items="${securityQues}" var="questions">
-							<form:option value="${questions.key}">${questions.value}</form:option>
+							<form:option value="${questions}">${questions}</form:option>
 							</c:forEach>
 							</form:select>
 <div>Answer:<form:input path="rec1_ans"/></div>
 <div>Recovery Question 1:<form:select path="rec2_ques" >
 						<c:forEach items="${securityQues}" var="questions">
-							<form:option value="${questions.key}">${questions.value}</form:option>
+							<form:option value="${questions}">${questions}</form:option>
 							</c:forEach>
 						</form:select></div>				
  <div>Answer:<form:input path="rec2_ans"/></div>						

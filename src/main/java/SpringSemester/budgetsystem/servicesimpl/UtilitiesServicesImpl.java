@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import SpringSemester.budgetsystem.beans.ApplicationData;
 import SpringSemester.budgetsystem.dao.UtilityServiceDao;
 import SpringSemester.budgetsystem.services.UtilitiesServices;
+import SpringSemester.budgetsystem.utilities.ApplicationUtilities;
 
 @Service("utilitiesservices")
 public class UtilitiesServicesImpl implements UtilitiesServices {
@@ -16,61 +17,77 @@ public class UtilitiesServicesImpl implements UtilitiesServices {
 	@Autowired
 	UtilityServiceDao utilityservicedao;
 	
-	
+	ApplicationUtilities utilities = new ApplicationUtilities();
 	
 	public UtilitiesServicesImpl() {
 		
 	}
 	
 	@Override
-	public HashMap<String,String>  getIncomeList() {
+	public String[]  getIncomeList() {
 		List<ApplicationData> incomeList = utilityservicedao.retrieveIncomeType();
 		HashMap<String,String> incomeListMap = new HashMap<>();
-	    for(ApplicationData data:incomeList) {
+		String [] incometype = new String[incomeList.size()];
+		int i=0;    
+		for(ApplicationData data:incomeList) {
 	    	incomeListMap.put(data.getCode(), data.getType());
+	    	incometype[i] = data.getCode();
+	    	i++;
 	    }
-	     
-	    		
-		return incomeListMap;
+	     utilities.setIncomeListMap(incomeListMap);
+	    	
+	    
+		return incometype;
 	}
 
 	@Override
 	public String[]  getExpensesLists() {
 		List<ApplicationData> expensesList = utilityservicedao.retrieveExpensesType();
-		
-//		HashMap<String,String> expensesListMap = new HashMap<>();
-//	    for(ApplicationData data:expensesList) {
-//	    	expensesListMap.put(data.getCode(), data.getType());
-//	    }
-		String [] arrayOfExpenses=new String[expensesList.size()];
+		HashMap<String,String> expensesListMap = new HashMap<>();
+		String [] expensestype=new String[expensesList.size()];
 		int i=0;
-		for(ApplicationData data : expensesList) {
-			arrayOfExpenses[i]=data.getCode();
+
+		for(ApplicationData data:expensesList) {
+	    	expensesListMap.put(data.getCode(), data.getType());
+			expensestype[i]=data.getCode();
 			i++;
+
 		}
-	   return arrayOfExpenses;
+	    utilities.setExpensesListMap(expensesListMap);
+		
+	   return expensestype;
 	}
 
 	@Override
-	public HashMap<String,String>  getUserProfileType() {
+	public String[]  getUserProfileType() {
 		List<ApplicationData> userprofiletypes = utilityservicedao.retrieveProfileType();
 		HashMap<String,String> userProfiletypesMap = new HashMap<>();
-	    for(ApplicationData data:userprofiletypes) {
+	    String [] profileType = new String[userprofiletypes.size()];
+	    int i=0;
+		for(ApplicationData data:userprofiletypes) {
 	    	userProfiletypesMap.put(data.getCode(), data.getType());
-	    }
-
-		return userProfiletypesMap;
+	    	profileType[i]=data.getCode();
+	    	i++;
+		}
+	    
+	    utilities.setUserProfiletypesMap(userProfiletypesMap);
+		return profileType;
 	}
 
 	@Override
-	public HashMap<String,String> getSecurityQuestion() {
+	public String[] getSecurityQuestion() {
 		List<ApplicationData> securityquestions = utilityservicedao.retrieveSecurityQuestions();
 	    HashMap<String,String> securityQuestionsMap = new HashMap<>();
+	    String[] arrayofQues = new String[securityquestions.size()];
+	    int i=0;
 	    for(ApplicationData data:securityquestions) {
-	    	securityQuestionsMap.put(data.getCode(), data.getDetails());
+	    	securityQuestionsMap.put(data.getDetails(),data.getType() );
+	    	arrayofQues[i] = data.getDetails();
+	    	i++;
 	    }
+	    utilities.setSecurityQuestionsMap(securityQuestionsMap);
 	    
-		return securityQuestionsMap;
+		return arrayofQues;
 		
 	}
 

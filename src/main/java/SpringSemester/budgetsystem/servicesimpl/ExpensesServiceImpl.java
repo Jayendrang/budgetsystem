@@ -27,17 +27,9 @@ public class ExpensesServiceImpl implements ExpensesServices {
 		boolean daoproceedflag=false;
 		boolean servletflag =false;
 		if((session!=null) && (!expenses.isEmpty())) {
-		for(Expenses expense1 : expenses) {
-			if(expense1.getUser_id().trim().equals(session.getUserName().trim())){
-				daoproceedflag=true;
-				break;
-			}
-		}
-		if(daoproceedflag)
-		{
 			servletflag=expensesdao.addExpenses(expenses,session);
 		}
-		}
+		
 		return servletflag;
 	}
 
