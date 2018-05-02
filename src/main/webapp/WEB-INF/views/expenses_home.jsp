@@ -12,8 +12,7 @@
 </head>
 <body>
 	<div>
-		<form name="displayExpenses" method="GET"
-			action="${pageContext.request.contextPath}/expenses/servExpenses">
+		<form name="displayExpenses" >
 			<table border=2>
 				<tr>
 					<th>EXPENSES ID</th>
@@ -28,7 +27,7 @@
 					<tr>
 						<td>${expenses.expenses_id}</td>
 						<td>${expenses.expenses_date}</td>
-						<td>${expenses.expenses_type}</td>
+						<td>${expenses.expenses_name}</td>
 						<td>${expenses.expenses_desc}</td>
 						<td>${expenses.amount}</td>
 						<td>${expenses.remark}</td>

@@ -56,7 +56,6 @@ public class AppDao {
 		
 		JdbcTemplate dbTemplate = new JdbcTemplate();
 		dbTemplate.setDataSource(initDataSource());
-		
 		return dbTemplate;
 	}
 }

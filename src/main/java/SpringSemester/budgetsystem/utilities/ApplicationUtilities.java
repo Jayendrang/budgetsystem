@@ -125,7 +125,7 @@ String [] sysMonth = new String[3];
 		this.expensesListMap = expensesListMap;
 	}
 
-	public String getIncomeListMap(String key) {
+	public static String getIncomeListMap(String key) {
 		return (String)incomeListMap.get(key);
 	}
 
@@ -133,7 +133,7 @@ String [] sysMonth = new String[3];
 		this.incomeListMap = incomeListMap;
 	}
 
-	public String getUserProfiletypesMap(String key) {
+	public static String getUserProfiletypesMap(String key) {
 		return (String)userProfiletypesMap.get(key);
 	}
 
@@ -141,7 +141,7 @@ String [] sysMonth = new String[3];
 		this.userProfiletypesMap = userProfiletypesMap;
 	}
 
-	public String getSecurityQuestionsMap(String key) {
+	public static String getSecurityQuestionsMap(String key) {
 		return securityQuestionsMap.get(key);
 	}
 

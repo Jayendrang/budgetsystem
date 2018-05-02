@@ -5,7 +5,14 @@ import java.util.List;
 
 
 public class Income {
-	private String income_id,user_id,income_date,income_type,income_category,income_desc,amount,remark;
+	private String income_id,user_id,income_date,income_type,income_category,income_desc,amount,remark,created_on;
+	public String getCreated_on() {
+		return created_on;
+	}
+
+	public void setCreated_on(String created_on) {
+		this.created_on = created_on;
+	}
 	private List<Income> incomeList = new ArrayList<Income>();
 	
 	public Income() {

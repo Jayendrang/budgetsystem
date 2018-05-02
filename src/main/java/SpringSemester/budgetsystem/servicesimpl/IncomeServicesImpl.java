@@ -27,13 +27,6 @@ public class IncomeServicesImpl implements IncomeServices {
 		boolean servletflag =false;
 		
 		if((!sessionInfo.equals(null)) &&(!incomeList.isEmpty())) {
-			for(Income income : incomeList) {
-				if(sessionInfo.getUserName().equals(income.getUser_id())) {
-					daoproceedflag=true;
-				}
-			}
-		}
-		if(daoproceedflag) {
 			servletflag = incomedao.addIncome(incomeList,sessionInfo);
 		}
 		

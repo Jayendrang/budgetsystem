@@ -71,7 +71,6 @@ public class ExpensesController extends HttpServlet {
 			HttpSession httpSession = httpRequest.getSession();
 			httpSession.setAttribute("user_id", "GuMPnZqYSe");
 			if (!httpSession.getAttribute("user_id").toString().isEmpty()) {
-
 				SessionInfo session = new SessionInfo();
 				session.setUserName(httpSession.getAttribute("user_id").toString());
 				List<Expenses> expenseslist = expensesservices.getAllExpenses(session);
@@ -169,43 +168,37 @@ public class ExpensesController extends HttpServlet {
 					Map.Entry<String, String[]> entry = (Entry<String, String[]>) setItr.next();
 					String paramName = entry.getKey();
 					String[] paramValues = entry.getValue();
-					
+					System.out.println(paramName);
 					switch (paramName) {
 
 					case "date-value": {
-						System.out.println("Date");
 						date = new String[paramValues.length];
 						date = paramValues;
 						continue;
 					}
 					case "expenses_category": {
-						System.out.println("Cat");
 						category= new String[paramValues.length];
 						category = paramValues;
 						continue;
 					}
 					case "expense-desc": {
-						System.out.println("Desc");
 						desc = new String[paramValues.length];
 						desc = paramValues;
 						continue;
 					}
 					case "expense-amt": {
-						System.out.println("amount");
 						amount = new String[paramValues.length];
 						amount = paramValues;
 						continue;
 					}
 					case "remarks":
 					{
-						System.out.println("Remark");
 						remarks = new String[paramValues.length];
 						remarks = paramValues;
 						continue;
 					}
 				}
 					for (int s = 0; s < date.length; s++) {
-						System.out.println(	date[s] + "--" + category[s] + "--" + desc[s] + "--" + amount[s] + "--" + remarks[s]);
 						Expenses expenses = new Expenses();
 						expenses.setExpenses_date(date[s]);
 						expenses.setExpenses_name(category[s]);
@@ -219,6 +212,8 @@ public class ExpensesController extends HttpServlet {
 				}
 				System.out.println(expensesservices.addExpenses(expensesList, session));
 			} else {
+			
+			
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -264,12 +259,9 @@ public class ExpensesController extends HttpServlet {
 		try {
 			SessionInfo session = new SessionInfo();
 			session.setUserName("GuMPnZqYSe");
-			List<Expenses> expenseslist = expensesservices.getAllExpenses(session);
-			if (expenseslist != null) {
-				httprequest.setAttribute("expenselist", expenseslist);
 				httprequest.setAttribute("applicationdata", utilityservices.getExpensesLists());
 				httprequest.getRequestDispatcher("/WEB-INF/views/expenses.jsp").forward(httprequest, httpresponse);
-			}
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -38,11 +38,19 @@ public class IncomeDaoImpl implements IncomeDao {
 			for (Income income : incomelist) {
 				String insertQuery = "insert into sor_income(income_id,user_id,income_Date,income_name,income_type,income_desc,amount,remark,created_on) "
 						+ "values(?,?,?,?,?,?,?,?,?)";
+				
 				status = template.update(insertQuery,
-						new Object[] { ApplicationUtilities.getRandomIncomeID(), session.getUserName(),
-								income.getIncome_date(), income.getIncome_category(), income.getIncome_type(),
-								income.getIncome_desc(), Double.parseDouble(income.getAmount()), income.getRemark(),
+						new Object[] { ApplicationUtilities.getRandomIncomeID(),
+								session.getUserName(),
+								income.getIncome_date(), 
+								income.getIncome_category(),
+								income.getIncome_type(),
+								income.getIncome_desc(),
+								Double.parseDouble(income.getAmount()),
+								income.getRemark(),
 								ApplicationUtilities.getCurrentDate() });
+			
+				System.out.println("Query"+status);
 				result = status > 0 ? true : false;
 			}
 		} catch (Exception ex) {
@@ -74,7 +82,7 @@ public class IncomeDaoImpl implements IncomeDao {
 
 	@Override
 	public List<Income> retrieveAllIncomes(SessionInfo session) {
-		String selectQuery = "select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark from sor_income where user_id=?";
+		String selectQuery = "select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark,created_on from sor_income where user_id=?";
 		List<Income> incomeList = new ArrayList<Income>();
 		try {
 			incomeList=template.queryForObject(selectQuery, new Object[] {session.getUserName()},new IncomeDataMapper());
@@ -88,7 +96,7 @@ public class IncomeDaoImpl implements IncomeDao {
 
 	@Override
 	public List<Income> retrieveIncomeByDate(String fromDate, String toDate, SessionInfo session) {
-		String selectQuery ="select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark from sor_income where user_id=? and income_Date between ? and ?;";
+		String selectQuery ="select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark,created_on from sor_income where user_id=? and income_Date between ? and ?";
 		List<Income> incomeList = new ArrayList<Income>();
 		try {
 			incomeList = template.queryForObject(selectQuery, new Object[] {session.getUserName(),fromDate,toDate}, new IncomeDataMapper());
@@ -136,6 +144,7 @@ public class IncomeDaoImpl implements IncomeDao {
 				income.setIncome_desc(resultset.getString("income_desc"));
 				income.setAmount(String.valueOf(resultset.getDouble("amount")));
 				income.setRemark(resultset.getString("remark"));
+				income.setCreated_on(resultset.getString("created_on"));
 				incomeList.add(income);
 			}
 			return incomeList;
