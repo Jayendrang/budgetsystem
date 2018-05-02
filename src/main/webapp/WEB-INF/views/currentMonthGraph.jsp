@@ -25,7 +25,7 @@
 		incomelist1.add(map);
 	}
 	String expensedataPoints = gsonObj.toJson(expenselist1);
-	//String incomedataPoint = gsonObj.toJson(incomelist1);
+	String incomedataPoint = gsonObj.toJson(incomelist1);
 %>
 
 <!DOCTYPE HTML>
@@ -54,11 +54,33 @@
 	} ]
 		});
 	chart1.render();	
+	
+	var chart2 = new CanvasJS.Chart("chartContainer1", {
+		theme : "light2",
+		animationEnabled : true,
+		exportFileName : "New Year Resolutions",
+		exportEnabled : true,
+		title : {
+			text : "Expenses of current month"
+		},
+		data : [ {
+			type : "pie",
+			showInLegend : true,
+			legendText : "{label}",
+			toolTipContent : "{label}: <strong>{y}$</strong>",
+			indexLabel : "{label} {y}$",
+			dataPoints :
+<%out.print(incomedataPoint);%>
+} ]
+	});
+	chart2.render();
+	
 	}
 </script>
 </head>
 <body>
 	<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+	<div id="chartContainer1" style="height: 370px; width: 100%;"></div>
 	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
 </html>
