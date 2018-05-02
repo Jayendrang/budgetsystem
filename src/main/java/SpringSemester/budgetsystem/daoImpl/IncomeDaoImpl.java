@@ -30,7 +30,7 @@ public class IncomeDaoImpl implements IncomeDao {
 	}
 
 	@Override
-	public boolean addIncome(List<Income> incomelist,SessionInfo session) {
+	public boolean addIncome(List<Income> incomelist, SessionInfo session) {
 		int status = 0;
 		boolean result = false;
 
@@ -38,18 +38,13 @@ public class IncomeDaoImpl implements IncomeDao {
 			for (Income income : incomelist) {
 				String insertQuery = "insert into sor_income(income_id,user_id,income_Date,income_name,income_type,income_desc,amount,remark,created_on) "
 						+ "values(?,?,?,?,?,?,?,?,?)";
-				
+
 				status = template.update(insertQuery,
-						new Object[] { ApplicationUtilities.getRandomIncomeID(),
-								session.getUserName(),
-								income.getIncome_date(), 
-								income.getIncome_category(),
-								income.getIncome_type(),
-								income.getIncome_desc(),
-								Double.parseDouble(income.getAmount()),
-								income.getRemark(),
+						new Object[] { ApplicationUtilities.getRandomIncomeID(), session.getUserName(),
+								income.getIncome_date(), income.getIncome_category(), income.getIncome_type(),
+								income.getIncome_desc(), Double.parseDouble(income.getAmount()), income.getRemark(),
 								ApplicationUtilities.getCurrentDate() });
-			
+
 				result = status > 0 ? true : false;
 			}
 		} catch (Exception ex) {
@@ -60,7 +55,7 @@ public class IncomeDaoImpl implements IncomeDao {
 	}
 
 	@Override
-	public boolean updateIncome(Income income,SessionInfo session) {
+	public boolean updateIncome(Income income, SessionInfo session) {
 
 		String updateQueryIncome = "update sor_income set income_Date=?,income_type=?,income_name=?,income_desc=?,amount=?,remark=? where income_id=? and user_id=?";
 		boolean result = false;
@@ -84,10 +79,10 @@ public class IncomeDaoImpl implements IncomeDao {
 		String selectQuery = "select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark,created_on from sor_income where user_id=?";
 		List<Income> incomeList = new ArrayList<Income>();
 		try {
-			incomeList=template.queryForObject(selectQuery, new Object[] {session.getUserName()},new IncomeDataMapper());
-			
-			
-		}catch(Exception ex) {
+			incomeList = template.queryForObject(selectQuery, new Object[] { session.getUserName() },
+					new IncomeDataMapper());
+
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return incomeList;
@@ -95,32 +90,33 @@ public class IncomeDaoImpl implements IncomeDao {
 
 	@Override
 	public List<Income> retrieveIncomeByDate(String fromDate, String toDate, SessionInfo session) {
-		String selectQuery ="select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark,created_on from sor_income where user_id=? and income_Date between ? and ?";
+		String selectQuery = "select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark,created_on from sor_income where user_id=? and income_Date between ? and ?";
 		List<Income> incomeList = new ArrayList<Income>();
 		try {
-			incomeList = template.queryForObject(selectQuery, new Object[] {session.getUserName(),fromDate,toDate}, new IncomeDataMapper());
-		}catch(Exception ex)
-		{
+			incomeList = template.queryForObject(selectQuery, new Object[] { session.getUserName(), fromDate, toDate },
+					new IncomeDataMapper());
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return incomeList;
 	}
 
 	@Override
-	public boolean deleteIncome(List<Income> incomelist,SessionInfo session) {
+	public boolean deleteIncome(List<Income> incomelist, SessionInfo session) {
 		String deleteQuery = "delete from sor_income where income_id=? and user_id=?";
-		boolean result=false;
-		int executioncount=0,listcount=incomelist.size();
-		
+		boolean result = false;
+		int executioncount = 0, listcount = incomelist.size();
+
 		try {
-			for(Income income:incomelist) {
-				executioncount=+template.update(deleteQuery,new Object[] {income.getIncome_id(),session.getUserName()});
-				
+			for (Income income : incomelist) {
+				executioncount = +template.update(deleteQuery,
+						new Object[] { income.getIncome_id(), session.getUserName() });
+
 			}
-			if(executioncount==listcount) {
-				result=true;
+			if (executioncount == listcount) {
+				result = true;
 			}
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return result;
@@ -133,18 +129,20 @@ public class IncomeDaoImpl implements IncomeDao {
 		@Override
 		public List<Income> mapRow(ResultSet resultset, int arg1) throws SQLException {
 
-			while (resultset.next()) {
-				Income income = new Income();
+			if (resultset.first()) {
+				do {
+					Income income = new Income();
 
-				income.setIncome_id(resultset.getString("income_id"));
-				income.setIncome_date(resultset.getString("income_Date"));
-				income.setIncome_category(resultset.getString("income_name"));
-				income.setIncome_type(resultset.getString("income_type"));
-				income.setIncome_desc(resultset.getString("income_desc"));
-				income.setAmount(String.valueOf(resultset.getDouble("amount")));
-				income.setRemark(resultset.getString("remark"));
-				income.setCreated_on(resultset.getString("created_on"));
-				incomeList.add(income);
+					income.setIncome_id(resultset.getString("income_id"));
+					income.setIncome_date(resultset.getString("income_Date"));
+					income.setIncome_category(resultset.getString("income_name"));
+					income.setIncome_type(resultset.getString("income_type"));
+					income.setIncome_desc(resultset.getString("income_desc"));
+					income.setAmount(String.valueOf(resultset.getDouble("amount")));
+					income.setRemark(resultset.getString("remark"));
+					income.setCreated_on(resultset.getString("created_on"));
+					incomeList.add(income);
+				} while (resultset.next());
 			}
 			return incomeList;
 		}

@@ -1,5 +1,6 @@
 package SpringSemester.budgetsystem.servicesimpl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -25,133 +26,71 @@ public class BudgettingServiceImpl implements BudgettingService {
 	IncomeDao incomedao;
 
 	@Override
-	public HashMap<String, HashMap<String,Double>> predictNextMonthBalance(SessionInfo session) {
-		HashMap<String,HashMap<String,Double>> resultSet = new HashMap<>();
-		resultSet.put("meanIncome", meanOfIncome(session,3));
-		resultSet.put("meanExpenses",meanOfExpenses(session,3));
+	public List<HashMap<String, Double>> predictNextMonthBalance(SessionInfo session) {
+		List<HashMap<String, Double>> resultSet = new ArrayList<>();
+		resultSet.add(meanOfIncome(session, 3, false));
+		resultSet.add(meanOfExpenses(session, 3, false));
 		return resultSet;
 	}
 
 	@Override
-	public HashMap<String, HashMap<String,Double>> getCurrentMonthBudget(SessionInfo session) {
-		HashMap<String,HashMap<String,Double>> resultSet = new HashMap<>();
-		resultSet.put("meanIncome", meanOfIncome(session,1));
-		resultSet.put("meanExpenses",meanOfExpenses(session,1));
+	public List<HashMap<String, Double>> getCurrentMonthBudget(SessionInfo session) {
+		List<HashMap<String, Double>> resultSet = new ArrayList<>();
+		resultSet.add(meanOfIncome(session, 1, true));
+		resultSet.add(meanOfExpenses(session, 1, true));
 		return resultSet;
 	}
 
-	private HashMap<String, Double> meanOfExpenses(SessionInfo session, int numOfMonth) {
-		HashMap<String, List<Expenses>> monthlyExpensesHash = new HashMap<String, List<Expenses>>(3);
-		HashMap<String, Double> meanOfExpenses = new HashMap<String, Double>();
+	public HashMap<String, Double> meanOfIncome(SessionInfo session, int month, boolean current) {
+
+		HashMap<String, Double> incomeMean = new HashMap<>();
+		String[] firstDateOfMonth = ApplicationUtilities
+				.getFirstDateThreeMonths(Calendar.getInstance().get(Calendar.MONTH) + 1, true);
+		String[] lastDateOfMonth = ApplicationUtilities
+				.getLastDateThreeMonths(Calendar.getInstance().get(Calendar.MONTH) + 1, true);
+
 		try {
-			String[] firstDateOfMonth = ApplicationUtilities.getFirstDateThreeMonths(Calendar.MONTH);
-			String[] lastDateOfMonth = ApplicationUtilities.getLastDateThreeMonths(Calendar.MONTH);
-			double totalMeanExpenses=0.0;
-			List<Expenses> listofExpenses;
-			for (int month = 0; month < numOfMonth; month++) {
-				listofExpenses = expensesdao.retrieveExpensesByDate(firstDateOfMonth[month], lastDateOfMonth[month],
-						session);
-				if(!listofExpenses.equals(null)) {
-				monthlyExpensesHash.put(String.valueOf(month), listofExpenses);
-				}else {
-					throw new BudgetPredictException("Data Insufficient to predict future month balance");
-				}
+			List<Income> listofIncome = incomedao.retrieveIncomeByDate(firstDateOfMonth[0], lastDateOfMonth[0],
+					session);
+			for (Income income : listofIncome) {
+			if(incomeMean.containsKey(income.getIncome_category())) {
+				double summation =+ incomeMean.get(income.getIncome_category());
+				incomeMean.put(income.getIncome_category(),summation);
 			}
-
-			for (int pmonth = 0; pmonth < numOfMonth; pmonth++) {
-				if (pmonth == 0 || pmonth == 1) {
-					List<Expenses> monthexpenses = monthlyExpensesHash.get(pmonth);
-					for (Expenses expenses : monthexpenses) {
-						if (meanOfExpenses.containsKey(expenses.getExpenses_name())) {
-							double val = meanOfExpenses.get(expenses.getExpenses_name());
-							val += Double.parseDouble(expenses.getAmount());
-							meanOfExpenses.put(expenses.getExpenses_name(), val);
-							
-						} else {
-							meanOfExpenses.put(expenses.getExpenses_name(), Double.parseDouble(expenses.getAmount()));
-						}
-					}
-				}
-				if (pmonth == 2) {
-					List<Expenses> monthexpenses = monthlyExpensesHash.get(pmonth);
-					for (Expenses expenses : monthexpenses) {
-						if (meanOfExpenses.containsKey(expenses.getExpenses_name())) {
-							double val = meanOfExpenses.get(expenses.getExpenses_name());
-							val += Double.parseDouble(expenses.getAmount());
-							totalMeanExpenses = +(val/numOfMonth);
-							meanOfExpenses.put(expenses.getExpenses_name(), val / numOfMonth);
-								
-						} else {
-							totalMeanExpenses=+Double.parseDouble(expenses.getAmount());
-							meanOfExpenses.put(expenses.getExpenses_name(), Double.parseDouble(expenses.getAmount()));
-						}
-					}
-					meanOfExpenses.put("TotalMeanExpenses", totalMeanExpenses);
-				}
-
+				incomeMean.put(income.getIncome_category(), Double.parseDouble(income.getAmount()));
 			}
 
 		} catch (Exception ex) {
-			ex.getMessage();
+			ex.printStackTrace();
 		}
-		return meanOfExpenses;
+
+		return incomeMean;
 	}
 
-	private HashMap<String, Double> meanOfIncome(SessionInfo session, int numOfMonth) {
+	public HashMap<String, Double> meanOfExpenses(SessionInfo session, int month, boolean current) {
 
-		HashMap<String, List<Income>> monthlyIncomeHash = new HashMap<String, List<Income>>(3);
-		HashMap<String, Double> meanOfIncome = new HashMap<String, Double>();
-		double totalMeanIncome=0.0;
+		HashMap<String, Double> expensesMean = new HashMap<>();
+		String[] firstDateOfMonth = ApplicationUtilities
+				.getFirstDateThreeMonths(Calendar.getInstance().get(Calendar.MONTH) + 1, true);
+		String[] lastDateOfMonth = ApplicationUtilities
+				.getLastDateThreeMonths(Calendar.getInstance().get(Calendar.MONTH) + 1, true);
+
 		try {
-			String[] firstDateOfMonth = ApplicationUtilities.getFirstDateThreeMonths(Calendar.MONTH);
-			String[] lastDateOfMonth = ApplicationUtilities.getLastDateThreeMonths(Calendar.MONTH);
-			List<Income> listofIncome;
-			for (int month = 0; month < numOfMonth; month++) {
-				listofIncome = incomedao.retrieveIncomeByDate(firstDateOfMonth[month], lastDateOfMonth[month], session);
-				if(!listofIncome.equals(null)) {
-				monthlyIncomeHash.put(String.valueOf(month), listofIncome);
-				}else {
-					throw new BudgetPredictException("Data Insufficient to predict future month balance");
+			List<Expenses> listofIncome = expensesdao.retrieveExpensesByDate(firstDateOfMonth[0], lastDateOfMonth[0],
+					session);
+			for (Expenses expenses : listofIncome) {
+				if (expensesMean.containsKey(expenses.getExpenses_name())) {
+					double summation = +expensesMean.get(expenses.getExpenses_name());
+					expensesMean.put(expenses.getExpenses_name(), summation);
+				} else {
+					expensesMean.put(expenses.getExpenses_name(), Double.parseDouble(expenses.getAmount()));
 				}
-			}
-
-			for (int pmonth = 0; pmonth < numOfMonth; pmonth++) {
-				if (pmonth == 0 || pmonth == 1) {
-					List<Income> monthincome = monthlyIncomeHash.get(pmonth);
-					for (Income income : monthincome) {
-						if (meanOfIncome.containsKey(income.getIncome_category())) {
-							double val = meanOfIncome.get(income.getIncome_category());
-							val += Double.parseDouble(income.getAmount());
-							meanOfIncome.put(income.getIncome_category(), val);
-
-						} else {
-							meanOfIncome.put(income.getIncome_category(), Double.parseDouble(income.getAmount()));
-						}
-					}
-				}
-				if (pmonth == 2) {
-					List<Income> monthincome = monthlyIncomeHash.get(pmonth);
-					for (Income income : monthincome) {
-						if (meanOfIncome.containsKey(income.getIncome_category())) {
-							double val = meanOfIncome.get(income.getIncome_category());
-							val += Double.parseDouble(income.getAmount());
-							totalMeanIncome = + (val/numOfMonth);
-							meanOfIncome.put(income.getIncome_category(), val /numOfMonth);
-
-						} else {
-							totalMeanIncome=+Double.parseDouble(income.getAmount());
-							meanOfIncome.put(income.getIncome_category(), Double.parseDouble(income.getAmount()));
-						}
-					}
-					meanOfIncome.put("TotalMeanIncome", totalMeanIncome);
-				}
-
 			}
 
 		} catch (Exception ex) {
-			ex.getMessage();
+			ex.printStackTrace();
 		}
-		return meanOfIncome;
 
+		return expensesMean;
 	}
 }

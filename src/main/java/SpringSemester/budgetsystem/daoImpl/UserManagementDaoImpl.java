@@ -35,7 +35,8 @@ public class UserManagementDaoImpl implements UserManagementDao {
 		try {
 			String searchQuery = "select user_id,user_first_name,user_lastname from user_information where user_id=? and password=? and status=?";
 			session = (SessionInfo) template.queryForObject(searchQuery,
-					new Object[] { login.getUsername(), login.getPassword(),ApplicationUtilities.ACTIVE_STATUS }, new LoginDataMapper());
+					new Object[] { login.getUsername(), login.getPassword(), ApplicationUtilities.ACTIVE_STATUS },
+					new LoginDataMapper());
 			return session;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -75,39 +76,32 @@ public class UserManagementDaoImpl implements UserManagementDao {
 	public UserInfo getUserProfile(SessionInfo session) {
 		String selectQuery = "select user_first_name,user_lastname,email_id,mobile_contact,password,address,"
 				+ "recovery_question_1,recovery_answer_1,recovery_question_2,recovery_answer_2 from user_information"
-				+ " where"
-				+ " user_id=?";
+				+ " where" + " user_id=?";
 		try {
-		UserInfo userInfo = template.queryForObject(selectQuery, new Object[] { session.getUserName() },
-				new UserProfileDataMapper());
-		if (!userInfo.equals(null)) {
-			return userInfo;
-		}}catch(Exception ex) {
+			UserInfo userInfo = template.queryForObject(selectQuery, new Object[] { session.getUserName() },
+					new UserProfileDataMapper());
+			if (!userInfo.equals(null)) {
+				return userInfo;
+			}
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return null;
 	}
 
 	@Override
-	public boolean updateUserProfile(SessionInfo session,UserInfo userdata) {
+	public boolean updateUserProfile(SessionInfo session, UserInfo userdata) {
 		String updateQuery = "update user_information set email_id=?,mobile_contact=?,password=?,address=?,"
 				+ "recovery_question_1=?,recovery_answer_1=?,recovery_question_2=?,recovery_answer_2=? "
 				+ "where user_id=?";
-		boolean result=false;
+		boolean result = false;
 		try {
-			int count = template.update(updateQuery,new Object[] {
-					userdata.getEmail_id(),
-					userdata.getMobile_contact(),
-					userdata.getPassword(),
-					userdata.getAddress(),
-					userdata.getRec1_ques(),
-					userdata.getRec1_ans(),
-					userdata.getRec2_ques(),
-					userdata.getRec2_ans(),
-					session.getUserName()
-					});
-			result = count>0?true:false;
-		}catch(Exception ex) {
+			int count = template.update(updateQuery,
+					new Object[] { userdata.getEmail_id(), userdata.getMobile_contact(), userdata.getPassword(),
+							userdata.getAddress(), userdata.getRec1_ques(), userdata.getRec1_ans(),
+							userdata.getRec2_ques(), userdata.getRec2_ans(), session.getUserName() });
+			result = count > 0 ? true : false;
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return result;
@@ -116,11 +110,12 @@ public class UserManagementDaoImpl implements UserManagementDao {
 	@Override
 	public boolean deleteUserProfile(SessionInfo session) {
 		String deleteQuery = "update user_information set status=? where user_id=?";
-		boolean result=false;
+		boolean result = false;
 		try {
-			int count = template.update(deleteQuery,new Object[] {ApplicationUtilities.INACTIVE_STATUS,session.getUserName()});
-			result=count>0?true:false;
-		}catch(Exception ex) {
+			int count = template.update(deleteQuery,
+					new Object[] { ApplicationUtilities.INACTIVE_STATUS, session.getUserName() });
+			result = count > 0 ? true : false;
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return result;
@@ -129,19 +124,20 @@ public class UserManagementDaoImpl implements UserManagementDao {
 	class UserProfileDataMapper implements org.springframework.jdbc.core.RowMapper<UserInfo> {
 		public UserInfo mapRow(ResultSet resultset, int arg1) throws SQLException {
 			UserInfo userInfo = new UserInfo();
-			while (resultset.next()) {
-				userInfo.setUser_fname(resultset.getString("user_frist_name"));
-				userInfo.setUser_lname(resultset.getString("user_lastname"));
-				userInfo.setEmail_id(resultset.getString("email_id"));
-				userInfo.setMobile_contact(resultset.getString("mobile_contact"));
-				userInfo.setPassword(resultset.getString("password"));
-				userInfo.setAddress(resultset.getString("address"));
-				userInfo.setRec1_ques(resultset.getString("recovery_question_1"));
-				userInfo.setRec1_ans(resultset.getString("recovery_answer_1"));
-				userInfo.setRec2_ques(resultset.getString("recovery_question_2"));
-				userInfo.setRec2_ans(resultset.getString("recovery_answer_2"));
+			if (resultset.first()) {
+				do {
+					userInfo.setUser_fname(resultset.getString("user_frist_name"));
+					userInfo.setUser_lname(resultset.getString("user_lastname"));
+					userInfo.setEmail_id(resultset.getString("email_id"));
+					userInfo.setMobile_contact(resultset.getString("mobile_contact"));
+					userInfo.setPassword(resultset.getString("password"));
+					userInfo.setAddress(resultset.getString("address"));
+					userInfo.setRec1_ques(resultset.getString("recovery_question_1"));
+					userInfo.setRec1_ans(resultset.getString("recovery_answer_1"));
+					userInfo.setRec2_ques(resultset.getString("recovery_question_2"));
+					userInfo.setRec2_ans(resultset.getString("recovery_answer_2"));
+				} while (resultset.next());
 			}
-
 			return userInfo;
 		}
 
@@ -154,12 +150,13 @@ public class UserManagementDaoImpl implements UserManagementDao {
 			System.out.println("inside result set");
 			SessionInfo session = new SessionInfo();
 			UserLogin info = new UserLogin();
+			if(resultset.first()) {
 			info.setUsername(resultset.getString("user_id"));
 			session.setLoginUser(info);
 			session.setSessionId(resultset.getString("user_id"));
 			session.setFname(resultset.getString("user_first_name"));
 			session.setLname(resultset.getString("user_lastname"));
-
+			}
 			return session;
 		}
 

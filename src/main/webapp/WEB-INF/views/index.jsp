@@ -10,7 +10,7 @@
 <link href="${pageContext.request.contextPath}/resources/style.css" rel="stylesheet"/>
 </head>
 <body>
-<h1>Welcome</h1>
+<h1 style="color:blue">Welcome</h1>
 <form:form action="${pageContext.request.contextPath}/user/validateUser" modelAttribute="userLogin" method="GET" >
 <div>Username :<form:input path="username"/></div>
 <div>Password :<form:input path="password"/></div>
