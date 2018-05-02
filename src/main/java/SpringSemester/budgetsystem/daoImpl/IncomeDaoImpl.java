@@ -50,7 +50,6 @@ public class IncomeDaoImpl implements IncomeDao {
 								income.getRemark(),
 								ApplicationUtilities.getCurrentDate() });
 			
-				System.out.println("Query"+status);
 				result = status > 0 ? true : false;
 			}
 		} catch (Exception ex) {

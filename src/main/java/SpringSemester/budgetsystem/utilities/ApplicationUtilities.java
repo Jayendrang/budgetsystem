@@ -108,14 +108,21 @@ String [] sysMonth = new String[3];
 
 	// Random Income ID
 	public static String getRandomIncomeID() {
-		StringBuilder expensesID = new StringBuilder();
+		StringBuilder incomeID = new StringBuilder();
 		String randamAlphaNumeric = RandomStringUtils.randomAlphabetic(6);
-		expensesID.append("inc");
-		expensesID.append(randamAlphaNumeric);
-		return expensesID.toString();
+		incomeID.append("inc");
+		incomeID.append(randamAlphaNumeric);
+		return incomeID.toString();
 	}
 
-	
+	//Random ReminderID
+	public static String getReminderID() {
+		StringBuilder reminderID = new StringBuilder();
+		String randamAlphaNumeric = RandomStringUtils.randomAlphabetic(6);
+		reminderID.append("rim");
+		reminderID.append(randamAlphaNumeric);
+		return reminderID.toString();
+	}
 	
 	public static String getExpensesListMap(String key) {
 		return (String)expensesListMap.get(key);

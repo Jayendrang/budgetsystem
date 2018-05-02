@@ -13,6 +13,7 @@
 
 </head>
 <body>
+
 <form:form action="${pageContext.request.contextPath}/user/processRegistration" modelAttribute="UserInfo">
 <h1>New Registration Information </h1>
 <div>First Name  :  <form:input path="user_fname"/></div> 
@@ -39,4 +40,10 @@
 
 
 </body>
+
+<script type="text/javascript">
+function onblurevent(){
+	alert("check the name");	
+}
+</script>
 </html>
