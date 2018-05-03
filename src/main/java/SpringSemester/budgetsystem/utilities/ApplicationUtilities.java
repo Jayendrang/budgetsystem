@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import SpringSemester.budgetsystem.beans.SessionInfo;
+
 public class ApplicationUtilities {
 
 	// General User status
@@ -18,6 +20,18 @@ public class ApplicationUtilities {
 	private static HashMap<String, String> incomeListMap = new HashMap<>();
 	private static HashMap<String, String> userProfiletypesMap = new HashMap<>();
 	private static HashMap<String, String> securityQuestionsMap = new HashMap<>();
+	private static SessionInfo session = new SessionInfo();
+	
+	public static SessionInfo getSession() {
+		System.out.println("Getsession called");
+		return session;
+	}
+
+	public static void setSession(SessionInfo lsession) throws NullPointerException {
+				session = lsession;
+		System.out.println("Session resumed"+session.getFname()+""+session.getUserName());
+		
+	}
 
 	// Last date of 3 months
 	public static String[] getLastDateThreeMonths(int month, boolean thismonth) {
@@ -30,7 +44,6 @@ public class ApplicationUtilities {
 				calendar.set(calendar.DAY_OF_MONTH, 0);
 				Date ds = calendar.getTime();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				System.out.println(sdf.format(ds).toString());
 				sysMonth[0] = sdf.format(ds).toString();
 		
 			}else {
@@ -40,7 +53,6 @@ public class ApplicationUtilities {
 						calendar.set(calendar.DAY_OF_MONTH, 0);
 						Date ds = calendar.getTime();
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-						System.out.println(sdf.format(ds).toString());
 						sysMonth[i] = sdf.format(ds).toString();
 					}
 			}

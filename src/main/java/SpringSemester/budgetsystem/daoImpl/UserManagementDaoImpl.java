@@ -53,8 +53,8 @@ public class UserManagementDaoImpl implements UserManagementDao {
 					+ "mobile_contact,password,address,profile_creation_date,reset_temp_password,"
 					+ "recovery_question_1,recovery_answer_1,recovery_question_2,recovery_answer_2,"
 					+ "last_login_datetime,status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
-			System.out.println("mobile contact" + userdata.getMobile_contact().length());
-
+			System.out.println("mobile contact" + userdata.getRec1_ques());
+			
 			int count = template.update(newUserInsertQuery,
 					new Object[] { userdata.getUser_id(), userdata.getUser_fname(), userdata.getUser_lname(),
 							userdata.getUser_type(), userdata.getEmail_id(), userdata.getMobile_contact().trim(),
@@ -156,6 +156,7 @@ public class UserManagementDaoImpl implements UserManagementDao {
 			session.setSessionId(resultset.getString("user_id"));
 			session.setFname(resultset.getString("user_first_name"));
 			session.setLname(resultset.getString("user_lastname"));
+			session.setUserName(resultset.getString("user_id"));
 			}
 			return session;
 		}

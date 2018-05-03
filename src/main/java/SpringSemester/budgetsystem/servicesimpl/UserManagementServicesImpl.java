@@ -23,7 +23,6 @@ public class UserManagementServicesImpl implements UserManagementServices {
 	@Override
 	public SessionInfo validateUser(UserLogin login) {
 		SessionInfo session = usermanagementdao.getUserLoginData(login); 
-		System.out.println("service"+session.getUserName());
 		return session;
 	}
 
@@ -34,15 +33,20 @@ public class UserManagementServicesImpl implements UserManagementServices {
 	}
 
 	@Override
-	public boolean addNewUser(UserInfo info) {
+	public String addNewUser(UserInfo info) {
 		
-		info.setUser_id(ApplicationUtilities.getRandomUserID(info.getUser_fname(),info.getUser_lname()));
+		String userid = ApplicationUtilities.getRandomUserID(info.getUser_fname(),info.getUser_lname());
+		
+		info.setUser_id(userid);
 		info.setProfile_creation_date( ApplicationUtilities.getCurrentDate());
 		info.setStatus(ApplicationUtilities.ACTIVE_STATUS);
 		info.setLast_log_time(ApplicationUtilities.getCurrentDateAndTime());
 		info.setUser_type("GNUSR");
-		
-		return usermanagementdao.addNewUser(info);
+		boolean result=usermanagementdao.addNewUser(info);
+		if(result) {
+			return userid;
+		}
+		return null;
 	}
 
 	@Override

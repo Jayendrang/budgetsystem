@@ -10,6 +10,6 @@ public interface  UtilitiesServices {
 	public String[] getIncomeList();
 	public String[] getExpensesLists();
 	public String[] getUserProfileType();
-	public String[] getSecurityQuestion();
+	public List<ApplicationData> getSecurityQuestion();
 	
 }

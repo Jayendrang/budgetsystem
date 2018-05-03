@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -71,23 +72,19 @@ public class IncomeController {
 		String[] remarks = null;
 		List<Income> incomelist = new ArrayList<>();
 		try {
-			HttpSession httpSession = request.getSession();
-			httpSession.setAttribute("user_id", "GuMPnZqYSe");
 			
-			if ((!httpSession.getAttribute("user_id").toString().isEmpty())) {
-				session.setUserName(httpSession.getAttribute("user_id").toString());
+				session=ApplicationUtilities.getSession();
 				Map<String, String[]> pagedata = request.getParameterMap();
 				Set setData = pagedata.entrySet();
 				Iterator setItr = setData.iterator();
 				while (setItr.hasNext()) {
 					Map.Entry<String, String[]> entry = (Entry<String, String[]>) setItr.next();
 					String paramName = entry.getKey();
-					System.out.println(paramName);
 					String[] paramValues = entry.getValue();
 					
 					switch (paramName) {
 
-					case "date-value": {
+					case "income-date-value": {
 						date = new String[paramValues.length];
 						date = paramValues;
 						continue;
@@ -107,7 +104,7 @@ public class IncomeController {
 						amount = paramValues;
 						continue;
 					}
-					case "income-remarks":
+					case "remarks":
 					{
 						remarks = new String[paramValues.length];
 						remarks = paramValues;
@@ -119,18 +116,18 @@ public class IncomeController {
 						income.setIncome_date(date[s]);
 						income.setIncome_category(category[s]);
 						income.setIncome_desc(desc[s]);
+						System.out.println("category"+category[s]);
 						income.setIncome_type(ApplicationUtilities.getIncomeListMap(category[s]));
 						income.setAmount(amount[s]);
 						income.setRemark(remarks[s]);
 						incomelist.add(income);
 					}
-
+					
+					incomeservices.addIncome(incomelist, session);
+					loadExpensesPage(request, response);
 				}
-				System.out.println(incomeservices.addIncome(incomelist, session));
-			} else {
+				
 			
-			
-			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -143,8 +140,6 @@ public class IncomeController {
 		List<Income> incomeList = new ArrayList<Income>();
 		SessionInfo sessionInfo = new SessionInfo();
 		try {
-		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("user_id", "GuMPnZqYSe");
 		String page = null;
 		if (!httpSesison.getAttribute("user_id").toString().isEmpty()) {
 			sessionInfo.setUserName(httpSesison.getAttribute("user_id").toString());
@@ -224,17 +219,22 @@ public class IncomeController {
 		return null;
 	}
 	
-	@RequestMapping(value="/serveIncome")
+	@RequestMapping(value="/serveIncome", method=RequestMethod.GET)
 	public String loadExpensesPage(HttpServletRequest request, HttpServletResponse response) {
-
-
+		List<Income> incomeList = new ArrayList<>();
+		SessionInfo session = ApplicationUtilities.getSession();
 		System.out.println("new non spring servlet");
 		try {
-			SessionInfo session = new SessionInfo();
-			session.setUserName("GuMPnZqYSe");
-				
-				request.setAttribute("applicationdata", utilityservices.getIncomeList());
-				request.getRequestDispatcher("/WEB-INF/views/income_new.jsp").forward(request, response);
+			
+			session.setUserName(session.getUserName());
+			
+			incomeList = incomeservices.getAllIncome(session);
+			if (!incomeList.isEmpty()) {
+				request.setAttribute("income_list", incomeList);
+				}
+			request.setAttribute("session_Info", session);
+			request.setAttribute("applicationdata", utilityservices.getIncomeList());
+			request.getRequestDispatcher("/WEB-INF/views/income_new.jsp").forward(request, response);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

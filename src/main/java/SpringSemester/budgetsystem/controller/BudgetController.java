@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import SpringSemester.budgetsystem.beans.ApplicationData;
 import SpringSemester.budgetsystem.beans.SessionInfo;
 import SpringSemester.budgetsystem.services.BudgettingService;
+import SpringSemester.budgetsystem.utilities.ApplicationUtilities;
 
 @Controller
 @RequestMapping(value = "/budget")
@@ -32,8 +34,7 @@ public class BudgetController {
 		Map<String,Double> incomeMap = new HashMap<>();
 		Map<String,Double> expenseMap = new HashMap<>();
 		try {
-			SessionInfo session = new SessionInfo();
-			session.setUserName("GuMPnZqYSe");
+			SessionInfo session = ApplicationUtilities.getSession();
 			
 			List<HashMap<String, Double>> currentMonthData = budgettingService.getCurrentMonthBudget(session);
 			if (!currentMonthData.isEmpty()) {

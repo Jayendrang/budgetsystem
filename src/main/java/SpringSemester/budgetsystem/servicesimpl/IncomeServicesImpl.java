@@ -23,12 +23,9 @@ public class IncomeServicesImpl implements IncomeServices {
 	
 	@Override
 	public boolean addIncome(List<Income> incomeList, SessionInfo sessionInfo) {
-		boolean daoproceedflag=false;
 		boolean servletflag =false;
 		
-		if((!sessionInfo.equals(null)) &&(!incomeList.isEmpty())) {
 			servletflag = incomedao.addIncome(incomeList,sessionInfo);
-		}
 		
 		return servletflag;
 	}

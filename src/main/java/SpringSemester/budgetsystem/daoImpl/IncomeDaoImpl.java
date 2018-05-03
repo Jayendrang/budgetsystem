@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -79,10 +80,14 @@ public class IncomeDaoImpl implements IncomeDao {
 		String selectQuery = "select income_id,user_id,income_Date,income_type,income_name,income_desc,amount,remark,created_on from sor_income where user_id=?";
 		List<Income> incomeList = new ArrayList<Income>();
 		try {
+			System.out.println("from db"+session.getUserName());
 			incomeList = template.queryForObject(selectQuery, new Object[] { session.getUserName() },
 					new IncomeDataMapper());
 
-		} catch (Exception ex) {
+		}catch(EmptyResultDataAccessException emptresult) {
+			emptresult.toString();
+		}
+		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return incomeList;
@@ -95,7 +100,9 @@ public class IncomeDaoImpl implements IncomeDao {
 		try {
 			incomeList = template.queryForObject(selectQuery, new Object[] { session.getUserName(), fromDate, toDate },
 					new IncomeDataMapper());
-		} catch (Exception ex) {
+		}catch(EmptyResultDataAccessException emptyresult) {
+			emptyresult.toString();
+		}catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return incomeList;
@@ -128,21 +135,24 @@ public class IncomeDaoImpl implements IncomeDao {
 
 		@Override
 		public List<Income> mapRow(ResultSet resultset, int arg1) throws SQLException {
+			try {
+				if (resultset != null || resultset.first()) {
+					do {
+						Income income = new Income();
 
-			if (resultset.first()) {
-				do {
-					Income income = new Income();
-
-					income.setIncome_id(resultset.getString("income_id"));
-					income.setIncome_date(resultset.getString("income_Date"));
-					income.setIncome_category(resultset.getString("income_name"));
-					income.setIncome_type(resultset.getString("income_type"));
-					income.setIncome_desc(resultset.getString("income_desc"));
-					income.setAmount(String.valueOf(resultset.getDouble("amount")));
-					income.setRemark(resultset.getString("remark"));
-					income.setCreated_on(resultset.getString("created_on"));
-					incomeList.add(income);
-				} while (resultset.next());
+						income.setIncome_id(resultset.getString("income_id"));
+						income.setIncome_date(resultset.getString("income_Date"));
+						income.setIncome_category(resultset.getString("income_name"));
+						income.setIncome_type(resultset.getString("income_type"));
+						income.setIncome_desc(resultset.getString("income_desc"));
+						income.setAmount(String.valueOf(resultset.getDouble("amount")));
+						income.setRemark(resultset.getString("remark"));
+						income.setCreated_on(resultset.getString("created_on"));
+						incomeList.add(income);
+					} while (resultset.next());
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 			return incomeList;
 		}

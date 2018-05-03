@@ -8,42 +8,45 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>User registration form</title>
-<link href="${pageContext.request.contextPath}/resources/style.css" rel="stylesheet"/>
-
+<title>Budget System</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/w3.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome-4.7.0/css/font-awesome.min.css">
+<link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet"/>
 </head>
-<body>
+<body class="w3-light-grey">
 
-<form:form action="${pageContext.request.contextPath}/user/processRegistration" modelAttribute="UserInfo">
-<h1>New Registration Information </h1>
-<div>First Name  :  <form:input path="user_fname"/></div> 
-<div>Last Name : <form:input path="user_lname"/></div> 
-<div>E-Mail		: <form:input path="email_id"/></div>
-<div>Mobile Contact : <form:input path="mobile_contact" /></div>
-<div>Address	: <form:input path="address"/></div>
-<div>Password   : <form:password path="password"/></div>
+<form:form action="${pageContext.request.contextPath}/user/processRegistration" modelAttribute="UserInfo" style="padding-left: 260px; padding-right: 300px;">
+<h1 align="center">New Registration Information </h1>
+<div><label for="ufname">First Name  :</label>  <form:input name="ufname" class="login-input" path="user_fname"/></div> 
+<div><label for="ulname">Last Name :</label> <form:input name="ulname" class="login-input" path="user_lname"/></div> 
+<div><label for="emailid">E-Mail		:</label> <form:input name="emailid" class="login-input" path="email_id"/></div>
+<div><label for="umobile">Mobile Contact :</label> <form:input name="umobile" class="login-input" path="mobile_contact" /></div>
+<div><label for=name="uaddress">Address	:</label> <form:input name="uaddress" class="login-input" path="address"/></div>
+<div><label for="upassword">Password   :</label> <form:password name="upassword" class="login-input" path="password"/></div>
 
-<div>Recovery Question 1: <form:select path="rec1_ques">
+<div><label for="secques1">Recovery Question 1:</label> <form:select name ="secques1" path="rec1_ques">
 							<c:forEach items="${securityQues}" var="questions">
-							<form:option value="${questions}">${questions}</form:option>
+							<form:option value="${questions.code}">${questions.details}</form:option>
 							</c:forEach>
-							</form:select>
-<div>Answer:<form:input path="rec1_ans"/></div>
-<div>Recovery Question 1:<form:select path="rec2_ques" >
+							</form:select></div>
+<div><label for="secans1">Answer:</label><form:input name="secans1" class="login-input" path="rec1_ans"/></div>
+<div><label for="recques2">Recovery Question 1:</label><form:select name="recques2" path="rec2_ques" >
 						<c:forEach items="${securityQues}" var="questions">
-							<form:option value="${questions}">${questions}</form:option>
+							<form:option value="${questions.code}">${questions.details}</form:option>
 							</c:forEach>
 						</form:select></div>				
- <div>Answer:<form:input path="rec2_ans"/></div>						
-		<div><form:button value="Sign up">Sign up </form:button> </div> 
+ <div><label for="recans2">Answer:</label><form:input name="recans2" class="login-input" path="rec2_ans"/></div>						
+		<div><form:button  class="login-submit" value="Sign up">Sign up </form:button> </div> 
 </form:form>
-
-
-</body>
-
+<script type="text/javascript"
+		src="${pageContext.request.contextPath}/resources/js/scripts.js"></script>
 <script type="text/javascript">
 function onblurevent(){
 	alert("check the name");	
 }
 </script>
+
+</body>
+
+
 </html>

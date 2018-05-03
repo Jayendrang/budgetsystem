@@ -75,19 +75,19 @@ public class UtilitiesServicesImpl implements UtilitiesServices {
 	}
 
 	@Override
-	public String[] getSecurityQuestion() {
+	public List<ApplicationData> getSecurityQuestion() {
 		List<ApplicationData> securityquestions = utilityservicedao.retrieveSecurityQuestions();
 	    HashMap<String,String> securityQuestionsMap = new HashMap<>();
 	    String[] arrayofQues = new String[securityquestions.size()];
-	    int i=0;
-	    for(ApplicationData data:securityquestions) {
-	    	securityQuestionsMap.put(data.getDetails(),data.getType() );
-	    	arrayofQues[i] = data.getDetails();
-	    	i++;
-	    }
+//	    int i=0;
+//	    for(ApplicationData data:securityquestions) {
+//	    	securityQuestionsMap.put(data.getDetails(),data.getType() );
+//	    	arrayofQues[i] = data.getDetails();
+//	    	i++;
+//	    }
 	    utilities.setSecurityQuestionsMap(securityQuestionsMap);
 	    
-		return arrayofQues;
+		return securityquestions;
 		
 	}
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -78,7 +79,10 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 		try {
 			expensesList = template.queryForObject(selectAllExpenses, new Object[] { session.getUserName() },
 					new ExpensesDataMapper());
-		} catch (Exception ex) {
+		}catch(EmptyResultDataAccessException emptyresultset) {
+			emptyresultset.toString();
+		}
+		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return expensesList;
@@ -92,7 +96,10 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 			expensesList = template.queryForObject(selectExepenseDate,
 					new Object[] { session.getUserName(), fromDate, toDate }, new ExpensesDataMapper());
 
-		} catch (Exception ex) {
+		}catch(EmptyResultDataAccessException emprt) {
+			emprt.toString();
+		}
+		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return expensesList;
@@ -123,10 +130,9 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 		@Override
 		public List<Expenses> mapRow(ResultSet resultset, int arg1) throws SQLException {
 			try {
-			if (resultset==null || resultset.first()) {
+			if (resultset!=null || resultset.first()) {
 				do {
 					Expenses expense = new Expenses();
-
 					expense.setExpenses_id(resultset.getString("expenses_id"));
 					expense.setExpenses_date(resultset.getString("expenses_date"));
 					expense.setExpenses_name(resultset.getString("expenses_name"));
@@ -135,7 +141,6 @@ public class ExpensesDaoImpl implements ExpenesesDao {
 					expense.setAmount(String.valueOf(resultset.getDouble("amount")));
 					expense.setRemark(resultset.getString("remark"));
 					expense.setCreated_on(resultset.getString("created_on"));
-
 					expensesList.add(expense);
 				} while (resultset.next());
 			}

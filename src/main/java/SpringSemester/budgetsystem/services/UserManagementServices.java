@@ -7,7 +7,7 @@ import SpringSemester.budgetsystem.beans.UserLogin;
 public interface UserManagementServices {
 
 	public SessionInfo validateUser(UserLogin login);
-	public boolean addNewUser(UserInfo info);
+	public String addNewUser(UserInfo info);
 	public UserInfo displayProfile(SessionInfo session);
 	public UserInfo updateProfile(UserInfo userInfo,SessionInfo session);
 	public boolean closeProfile(SessionInfo session);
