@@ -1,5 +1,5 @@
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 body {
-  margin: 20px;
   min-width: 250px;
 }
 
@@ -42,7 +42,7 @@ ul li:hover {
 }
 
 /* Style the close button */
-.close {
+.expense-close,.income-close {
   position: relative;
   left: 20%;
   top: 4%;
@@ -52,7 +52,7 @@ ul li:hover {
 }
 
 /* Style the + button */
-.add {
+.expense-add,.income-add {
   position: relative;
   left: 25%;
   top: 4%;
@@ -80,7 +80,4 @@ td, th {
     text-align: left;
     padding: 8px;
 	width:17%;
-}
-h1 {
-	color:red;
 }

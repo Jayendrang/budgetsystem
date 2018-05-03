@@ -61,7 +61,7 @@
 		exportFileName : "New Year Resolutions",
 		exportEnabled : true,
 		title : {
-			text : "Expenses of current month"
+			text : "Income details of current month"
 		},
 		data : [ {
 			type : "pie",

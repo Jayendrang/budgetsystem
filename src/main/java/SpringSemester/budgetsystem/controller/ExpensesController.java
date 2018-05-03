@@ -146,7 +146,7 @@ public class ExpensesController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/addexpenses", method = RequestMethod.POST)
-	public String addExpenses(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+	public void addExpenses(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			ModelMap model) {
 		SessionInfo session = new SessionInfo();
 		String[] date = null;
@@ -218,7 +218,6 @@ public class ExpensesController extends HttpServlet {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return null;
 	}
 
 	@RequestMapping(value = "/modifyexpenses", method = RequestMethod.POST)
